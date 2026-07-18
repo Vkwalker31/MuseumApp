@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Новости{% endblock %}
+{% block content %}
+<h1>Новости</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ search }}" placeholder="Поиск">
+  <button type="submit">Искать</button>
+</form>
+<ul>
+  {% for item in page_obj %}
+    <li>
+      <h3><a href="{% url 'pages:news_detail' item.pk %}">{{ item.title }}</a></h3>
+      <p>{{ item.summary }}</p>
+      {% if item.image %}<img src="{{ item.image.url }}" alt="" width="200">{% endif %}
+    </li>
+  {% empty %}
+    <li>Новостей нет.</li>
+  {% endfor %}
+</ul>
+{% if page_obj.has_other_pages %}
+  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
+{% endif %}
+{% endblock %}

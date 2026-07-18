@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Залы{% endblock %}
+{% block content %}
+<h1>Залы музея</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ search }}" placeholder="Поиск">
+  <input type="number" name="floor" value="{{ floor }}" placeholder="Этаж" min="0">
+  <select name="sort">
+    <option value="floor" {% if sort == 'floor' %}selected{% endif %}>По этажу</option>
+    <option value="name" {% if sort == 'name' %}selected{% endif %}>По названию</option>
+    <option value="number" {% if sort == 'number' %}selected{% endif %}>По номеру</option>
+  </select>
+  <button type="submit">Применить</button>
+</form>
+<ul>
+  {% for h in halls %}
+    <li>{{ h.number }} — {{ h.name }}, этаж {{ h.floor }}, площадь {{ h.area|default:"—" }} м²</li>
+  {% empty %}
+    <li>Залы не найдены.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

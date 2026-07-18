@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Демо параллельного кода (asyncio)</title>
+</head>
+<body>
+  <h1>Демонстрация параллельного кода (asyncio)</h1>
+  <p>Страница без CSS. Два внешних API запрашиваются параллельно через asyncio + aiohttp.</p>
+
+  <h2>API 1 — JSONPlaceholder</h2>
+  {% if api1.error %}
+    <p>Ошибка: {{ api1.error }}</p>
+  {% else %}
+    <p><strong>{{ api1.title }}</strong></p>
+    <p>{{ api1.body }}</p>
+  {% endif %}
+
+  <h2>API 2 — Quotable</h2>
+  {% if api2.error %}
+    <p>Ошибка: {{ api2.error }}</p>
+  {% else %}
+    <p>«{{ api2.content }}» — {{ api2.author }}</p>
+  {% endif %}
+
+  <p><a href="/museum/external-apis/">К странице внешних API</a> | <a href="/">На главную</a></p>
+</body>
+</html>

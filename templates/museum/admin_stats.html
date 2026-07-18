@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Статистика (админ){% endblock %}
+{% block content %}
+<h1>Статистика для администратора</h1>
+<h2>Количество экспонатов в каждом зале, поступивших после указанной даты</h2>
+<form method="get">
+  <label>Дата: <input type="date" name="date" value="{{ date_param }}"></label>
+  <button type="submit">Показать</button>
+</form>
+{% if date_param %}
+  <ul>
+    {% for hall, cnt in exhibits_by_hall_after_date %}
+      <li>Зал {{ hall.number }} ({{ hall.name }}) — {{ cnt }} экспонат(ов)</li>
+    {% empty %}
+      <li>Нет данных.</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<h2>Экскурсии за весь период</h2>
+<p>Всего экскурсий: {{ tours_total }}</p>
+<p>По сезонам:</p>
+<ul>
+  {% for s in tours_by_season %}
+    <li>{{ s.season|default:"—" }}: {{ s.cnt }}</li>
+  {% endfor %}
+</ul>
+
+<h2>Сотрудники по этажу</h2>
+<form method="get">
+  <label>Этаж: <input type="number" name="floor" value="{{ floor_param }}" min="0"></label>
+  <button type="submit">Показать</button>
+</form>
+<ul>
+  {% for emp in employees_by_floor %}
+    <li>{{ emp.full_name }}, {{ emp.position }}, зал {{ emp.hall }}, тел. {{ emp.phone }}</li>
+  {% empty %}
+    <li>Нет данных.</li>
+  {% endfor %}
+</ul>
+
+<h2>Экспонаты, поступившие за последние 6 месяцев</h2>
+<ul>
+  {% for ex in recent_exhibits %}
+    <li>{{ ex.name }}, {{ ex.date_of_entry|date:"d/m/Y" }}, зал {{ ex.hall }}, хранитель {{ ex.guardian|default:"—" }}</li>
+  {% empty %}
+    <li>Нет таких экспонатов.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

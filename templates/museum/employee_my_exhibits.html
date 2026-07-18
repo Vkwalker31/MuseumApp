@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Мои экспонаты{% endblock %}
+{% block content %}
+<h1>Закреплённые за мной экспонаты</h1>
+<ul>
+  {% for ex in exhibits %}
+    <li>
+      <a href="{% url 'museum:exhibit_detail' ex.pk %}">{{ ex.name }}</a>
+      — {{ ex.art_type|default:"—" }}, зал {{ ex.hall|default:"—" }}<br>
+      {{ ex.description|truncatewords:20 }}
+    </li>
+  {% empty %}
+    <li>За вами не закреплены экспонаты.</li>
+  {% endfor %}
+</ul>
+<p><a href="{% url 'museum:employee_my_tours' %}">Мои экскурсии</a></p>
+{% endblock %}

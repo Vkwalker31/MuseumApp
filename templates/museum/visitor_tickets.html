@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% block title %}Мои покупки{% endblock %}
+{% block content %}
+<h1>Мои покупки билетов и промокоды</h1>
+
+<h2>Купить билет</h2>
+<form method="post" id="buy-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Купить</button>
+</form>
+<script>
+document.getElementById('buy-form').addEventListener('submit', function(e) {
+  var tp = document.querySelector('[name="ticket_price"]');
+  if (!tp || !tp.value) { e.preventDefault(); alert('Выберите тариф.'); return false; }
+});
+</script>
+
+<h2>История покупок</h2>
+<ul>
+  {% for p in purchases %}
+    <li>
+      Дата (локально): {{ p.purchased_at|date:"d/m/Y H:i" }},
+      UTC: {% timezone "UTC" %}{{ p.purchased_at|date:"d/m/Y H:i" }}{% endtimezone %},
+      сумма {{ p.price }}, промокод: {{ p.promo_code|default:"—" }},
+      экскурсия: {{ p.tour|default:"—" }}
+    </li>
+  {% empty %}
+    <li>Покупок пока нет.</li>
+  {% endfor %}
+</ul>
+<p>
+  <a href="{% url 'pages:promo_list' %}">Промокоды и купоны</a> |
+  <a href="{% url 'museum:ticket_prices' %}">Тарифы</a>
+</p>
+{% endblock %}

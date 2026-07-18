@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h1>Музей</h1>
+{% if article %}
+  <h2>{{ article.title }}</h2>
+  <p>{{ article.content|truncatewords:50 }}</p>
+{% else %}
+  <p>Нет опубликованных статей.</p>
+{% endif %}
+{% endblock %}

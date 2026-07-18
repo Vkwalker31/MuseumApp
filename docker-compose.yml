@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: museumapp_db
+    environment:
+      POSTGRES_DB: museum
+      POSTGRES_USER: museum
+      POSTGRES_PASSWORD: museum
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U museum -d museum"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    image: museumapp:latest
+    container_name: museumapp_web
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DEBUG=0
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-change-me-in-production}
+      - DATABASE_URL=postgres://museum:museum@db:5432/museum
+      - LOGGING_LEVEL=INFO
+      - DJANGO_SUPERUSER_USERNAME=museum_admin
+      - DJANGO_SUPERUSER_PASSWORD=MuseumAdmin2026!
+      - DJANGO_SUPERUSER_EMAIL=admin@museum.local
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

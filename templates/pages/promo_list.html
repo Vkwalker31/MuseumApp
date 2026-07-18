@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Промокоды и купоны{% endblock %}
+{% block content %}
+<h1>Промокоды и купоны</h1>
+<h2>Действующие</h2>
+<ul>
+  {% for p in active %}
+    <li><strong>{{ p.code }}</strong> — {{ p.description }} (скидка: {{ p.discount_percent|default:p.discount_amount }})</li>
+  {% empty %}
+    <li>Нет действующих промокодов.</li>
+  {% endfor %}
+</ul>
+<h2>Архив</h2>
+<ul>
+  {% for p in archive %}
+    <li><strong>{{ p.code }}</strong> — {{ p.description }}</li>
+  {% empty %}
+    <li>Нет записей в архиве.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

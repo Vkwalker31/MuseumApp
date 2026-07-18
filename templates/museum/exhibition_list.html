@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Экспозиции и выставки{% endblock %}
+{% block content %}
+<h1>Экспозиции и выставки</h1>
+<h2>Экспозиции</h2>
+<ul>
+  {% for e in exhibitions %}
+    <li>{{ e.name }} — зал {{ e.hall|default:"—" }}, {{ e.start_date|date:"d/m/Y"|default:"" }} — {{ e.end_date|date:"d/m/Y"|default:"" }}</li>
+  {% empty %}
+    <li>Нет экспозиций.</li>
+  {% endfor %}
+</ul>
+<h2>Выставки</h2>
+<ul>
+  {% for s in shows %}
+    <li>{{ s.name }} — {{ s.start_date|date:"d/m/Y"|default:"" }} — {{ s.end_date|date:"d/m/Y"|default:"" }}</li>
+  {% empty %}
+    <li>Нет выставок.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

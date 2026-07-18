@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Мои экскурсии{% endblock %}
+{% block content %}
+<h1>Экскурсии, которые я провожу</h1>
+<ul>
+  {% for t in tours %}
+    <li>{{ t.code }} — {{ t.name }}, {{ t.date|date:"d/m/Y H:i" }}, группа {{ t.group_size }} чел.</li>
+  {% empty %}
+    <li>У вас нет запланированных экскурсий.</li>
+  {% endfor %}
+</ul>
+<p><a href="{% url 'museum:employee_my_exhibits' %}">Мои экспонаты</a></p>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Добавить отзыв{% endblock %}
+{% block content %}
+<h1>Добавить отзыв</h1>
+<form method="post" id="review-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Отправить</button>
+</form>
+<script>
+document.getElementById('review-form').addEventListener('submit', function(e) {
+  var rating = document.querySelector('[name="rating"]');
+  var text = document.querySelector('[name="text"]');
+  if (!rating || !rating.value) { e.preventDefault(); alert('Выберите оценку.'); return false; }
+  if (!text || !text.value.trim()) { e.preventDefault(); alert('Введите текст отзыва.'); return false; }
+});
+</script>
+<p><a href="{% url 'pages:reviews' %}">Назад к отзывам</a></p>
+{% endblock %}

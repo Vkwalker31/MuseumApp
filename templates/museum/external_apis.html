@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Внешние API{% endblock %}
+{% block content %}
+<h1>Данные из сторонних API</h1>
+<h2>API 1 — JSONPlaceholder (пример поста)</h2>
+{% if api1.error %}
+  <p>Ошибка: {{ api1.error }}</p>
+{% else %}
+  <p><strong>{{ api1.title }}</strong></p>
+  <p>{{ api1.body }}</p>
+{% endif %}
+
+<h2>API 2 — Quotable (случайная цитата)</h2>
+{% if api2.error %}
+  <p>Ошибка: {{ api2.error }}</p>
+{% else %}
+  <p>«{{ api2.content }}» — {{ api2.author }}</p>
+{% endif %}
+
+<p><a href="{% url 'museum:exhibit_list' %}">Назад</a></p>
+{% endblock %}

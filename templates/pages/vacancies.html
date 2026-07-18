@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Вакансии{% endblock %}
+{% block content %}
+<h1>Вакансии</h1>
+<ul>
+  {% for v in vacancies %}
+    <li>
+      <h3>{{ v.title }}</h3>
+      <p>{{ v.description|linebreaks }}</p>
+    </li>
+  {% empty %}
+    <li>Нет активных вакансий.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

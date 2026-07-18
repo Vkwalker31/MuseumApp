@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Контакты{% endblock %}
+{% block content %}
+<h1>Контакты</h1>
+{% for c in contacts_list %}
+  <div>
+    {% if c.photo %}<img src="{{ c.photo.url }}" alt="" width="120">{% endif %}
+    <h3>{{ c.name }}</h3>
+    <p>{{ c.role }}</p>
+    <p>{{ c.description|linebreaks }}</p>
+    <p>Тел.: {{ c.phone|default:"—" }} | Email: {{ c.email|default:"—" }}</p>
+  </div>
+{% empty %}
+  <p>Контакты не добавлены.</p>
+{% endfor %}
+{% endblock %}

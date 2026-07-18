@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h1>Статистические показатели</h1>
+<p>Таймзона: <strong>{{ user_timezone }}</strong></p>
+<p>Текущая дата ({{ user_timezone }}): <strong>{{ now_local_str }}</strong> | UTC: <strong>{{ now_utc_str }}</strong></p>
+<pre>{{ text_calendar }}</pre>
+
+<h2>Экспонаты по видам искусства (диаграмма)</h2>
+{% if chart_data %}
+  <div style="max-width: 400px;">
+    {% for item in exhibits_by_art_type %}
+      <div style="margin: 4px 0;">
+        <span style="display: inline-block; width: 120px;">{{ item.art_type__name|default:"Без типа" }}</span>
+        <span style="display: inline-block; background: #4a90d9; height: 20px; width: {{ item.cnt }}0px; min-width: 20px;"></span>
+        {{ item.cnt }}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Нет данных для диаграммы.</p>
+{% endif %}
+
+<h2>Экспонаты в алфавитном порядке</h2>
+<ol>
+  {% for name in exhibits_alpha %}
+    <li>{{ name }}</li>
+  {% empty %}
+    <li>Нет данных.</li>
+  {% endfor %}
+</ol>
+
+<h2>Экспонаты по видам искусства</h2>
+<ul>
+  {% for item in exhibits_by_art_type %}
+    <li>{{ item.art_type__name|default:"Без типа" }}: {{ item.cnt }}</li>
+  {% empty %}
+    <li>Нет данных.</li>
+  {% endfor %}
+</ul>
+<p>Наиболее популярный вид искусства: <strong>{% if most_popular_art %}{{ most_popular_art.art_type__name|default:"Без типа" }} ({{ most_popular_art.cnt }}){% else %}—{% endif %}</strong></p>
+<p>Вид с наибольшим «вкладом» (по числу экспонатов): <strong>{% if most_profitable_art %}{{ most_profitable_art.art_type__name|default:"Без типа" }}{% else %}—{% endif %}</strong></p>
+
+<h2>Продажи билетов</h2>
+<p>Всего покупок: {{ ticket_stats.count|default:0 }}</p>
+<p>Общая сумма: {{ ticket_stats.total_sum|default:0 }}</p>
+<p>Средняя сумма: {{ ticket_stats.avg_price|default:0 }}</p>
+<p>Медиана суммы: {{ median_price|default:"—" }}</p>
+<p>Мода суммы: {{ mode_price|default:"—" }}</p>
+
+<h2>Посетители (возраст)</h2>
+<p>Средний возраст: {{ avg_age|default:"—" }}</p>
+<p>Медиана возраста: {{ median_age|default:"—" }}</p>
+<p>Мода возраста: {{ mode_age|default:"—" }}</p>
+<ul>
+  {% for v in visitors %}
+    <li>{{ v.full_name }} — {{ v.age }} лет ({{ v.phone }})</li>
+  {% empty %}
+    <li>Нет зарегистрированных посетителей с профилем.</li>
+  {% endfor %}
+</ul>
+
+<h2>Экскурсии (размер группы)</h2>
+<p>Средний размер группы: {{ avg_group_size|default:"—" }}</p>
+<p>Медиана размера группы: {{ median_group_size|default:"—" }}</p>
+<p>Мода размера группы: {{ mode_group_size|default:"—" }}</p>
+
+{% if user.is_superuser %}
+  <p><a href="{% url 'museum:admin_stats' %}">Расширенная статистика (админ)</a></p>
+{% endif %}
+{% endblock %}

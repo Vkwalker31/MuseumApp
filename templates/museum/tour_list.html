@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Экскурсии{% endblock %}
+{% block content %}
+<h1>Проведённые экскурсии</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ search }}" placeholder="Поиск по коду или названию">
+  <select name="season">
+    <option value="">Все сезоны</option>
+    <option value="winter" {% if season == 'winter' %}selected{% endif %}>Зима</option>
+    <option value="spring" {% if season == 'spring' %}selected{% endif %}>Весна</option>
+    <option value="summer" {% if season == 'summer' %}selected{% endif %}>Лето</option>
+    <option value="autumn" {% if season == 'autumn' %}selected{% endif %}>Осень</option>
+  </select>
+  <select name="sort">
+    <option value="-date" {% if sort == '-date' %}selected{% endif %}>По дате (новые)</option>
+    <option value="date" {% if sort == 'date' %}selected{% endif %}>По дате (старые)</option>
+    <option value="name" {% if sort == 'name' %}selected{% endif %}>По названию</option>
+  </select>
+  <button type="submit">Применить</button>
+</form>
+<ul>
+  {% for t in page_obj %}
+    <li>{{ t.code }} — {{ t.name }}, {{ t.date|date:"d/m/Y H:i" }}, группа {{ t.group_size }} чел., проводник: {{ t.conductor|default:"—" }}, сезон: {{ t.get_season_display|default:"—" }}</li>
+  {% empty %}
+    <li>Экскурсий нет.</li>
+  {% endfor %}
+</ul>
+{% if page_obj.has_other_pages %}
+  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Стоимость посещения{% endblock %}
+{% block content %}
+<h1>Стоимость посещения</h1>
+<p>Тарифы зависят от дня недели, возраста и доп. услуг. Промокоды — на странице <a href="{% url 'pages:promo_list' %}">Промокоды</a>.</p>
+<table border="1" cellpadding="6">
+  <tr>
+    <th>Наименование</th>
+    <th>Цена</th>
+    <th>День недели (0–6)</th>
+    <th>Детский</th>
+    <th>Взрослый</th>
+    <th>Доп. услуга</th>
+  </tr>
+  {% for p in prices %}
+  <tr>
+    <td>{{ p.name }}</td>
+    <td>{{ p.base_price }}</td>
+    <td>{{ p.day_of_week|default:"любой" }}</td>
+    <td>{{ p.is_child|yesno:"да,нет" }}</td>
+    <td>{{ p.is_adult|yesno:"да,нет" }}</td>
+    <td>{{ p.is_extra_service|yesno:"да,нет" }}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6">Тарифы пока не заданы (добавьте в админке).</td></tr>
+  {% endfor %}
+</table>
+{% if user.is_authenticated and not user.is_superuser %}
+  <p><a href="{% url 'museum:visitor_tickets' %}">Купить билет</a></p>
+{% elif not user.is_authenticated %}
+  <p><a href="{% url 'login' %}">Войдите</a>, чтобы купить билет.</p>
+{% endif %}
+{% endblock %}

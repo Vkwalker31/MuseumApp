@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ exhibit.name }}{% endblock %}
+{% block content %}
+<h1>{{ exhibit.name }}</h1>
+{% if exhibit.image %}<img src="{{ exhibit.image.url }}" alt="" width="300">{% endif %}
+<p>Вид искусства: {{ exhibit.art_type|default:"—" }}</p>
+<p>Зал: {{ exhibit.hall|default:"—" }}</p>
+<p>Дата поступления: {{ exhibit.date_of_entry|date:"d/m/Y"|default:"—" }}</p>
+<p>Ответственный: {{ exhibit.guardian|default:"—" }}</p>
+<p>Создано: {{ exhibit.created_at|date:"d/m/Y H:i" }}</p>
+<p>Изменено: {{ exhibit.updated_at|date:"d/m/Y H:i" }}</p>
+<p>{{ exhibit.description|linebreaks }}</p>
+{% if user.is_superuser %}
+  <p><a href="{% url 'museum:exhibit_edit' exhibit.pk %}">Редактировать</a>
+  <form method="post" action="{% url 'museum:exhibit_delete' exhibit.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button type="submit">Удалить</button>
+  </form></p>
+{% endif %}
+<a href="{% url 'museum:exhibit_list' %}">К списку экспонатов</a>
+{% endblock %}

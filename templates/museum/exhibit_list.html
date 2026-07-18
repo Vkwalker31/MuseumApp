@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Экспонаты{% endblock %}
+{% block content %}
+<h1>Экспонаты</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ search }}" placeholder="Поиск по названию, описанию, виду искусства">
+  <select name="sort">
+    <option value="name" {% if sort == 'name' %}selected{% endif %}>По имени (А-Я)</option>
+    <option value="-name" {% if sort == '-name' %}selected{% endif %}>По имени (Я-А)</option>
+    <option value="date_of_entry" {% if sort == 'date_of_entry' %}selected{% endif %}>По дате поступления (старые)</option>
+    <option value="-date_of_entry" {% if sort == '-date_of_entry' %}selected{% endif %}>По дате поступления (новые)</option>
+  </select>
+  <button type="submit">Применить</button>
+</form>
+<ul>
+  {% for ex in page_obj %}
+    <li>
+      <a href="{% url 'museum:exhibit_detail' ex.pk %}">{{ ex.name }}</a>
+      — {{ ex.art_type|default:"—" }}, зал {{ ex.hall|default:"—" }}, поступил {{ ex.date_of_entry|date:"d/m/Y"|default:"—" }}
+    </li>
+  {% empty %}
+    <li>Экспонатов нет.</li>
+  {% endfor %}
+</ul>
+{% if page_obj.has_other_pages %}
+  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
+{% endif %}
+{% if user.is_superuser %}
+  <p><a href="{% url 'museum:exhibit_create' %}">Добавить экспонат</a></p>
+{% endif %}
+<p><a href="{% url 'museum:statistics' %}">Статистика</a></p>
+{% endblock %}

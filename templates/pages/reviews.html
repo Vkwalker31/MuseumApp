@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Отзывы{% endblock %}
+{% block content %}
+<h1>Отзывы</h1>
+{% if user.is_authenticated %}
+  <p><a href="{% url 'pages:review_add' %}">Добавить отзыв</a></p>
+{% else %}
+  <p><a href="{% url 'login' %}">Войдите</a> или <a href="{% url 'pages:register' %}">зарегистрируйтесь</a>, чтобы добавить отзыв.</a></p>
+{% endif %}
+<form method="get">
+  <input type="text" name="q" value="{{ search }}" placeholder="Поиск">
+  <select name="rating">
+    <option value="">Все оценки</option>
+    {% for i in "12345" %}
+      <option value="{{ i }}" {% if rating == i %}selected{% endif %}>{{ i }}</option>
+    {% endfor %}
+  </select>
+  <select name="sort">
+    <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Сначала новые</option>
+    <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>Сначала старые</option>
+    <option value="-rating" {% if sort == '-rating' %}selected{% endif %}>По оценке (высокая)</option>
+  </select>
+  <button type="submit">Применить</button>
+</form>
+<ul>
+  {% for r in page_obj %}
+    <li>
+      <strong>{{ r.author_name }}</strong> — {{ r.rating }}/5 ({{ r.created_at|date:"d/m/Y" }})<br>
+      {{ r.text }}
+    </li>
+  {% empty %}
+    <li>Отзывов пока нет.</li>
+  {% endfor %}
+</ul>
+{% if page_obj.has_other_pages %}
+  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
+{% endif %}
+{% endblock %}
