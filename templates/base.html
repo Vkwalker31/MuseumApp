@@ -1,51 +1,137 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Музей{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% block meta_description %}Музей искусств — экспозиции, экскурсии, билеты и новости культуры{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}музей, искусство, экскурсии, билеты, экспонаты, Минск{% endblock %}">
+    <meta name="author" content="Музей искусств">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="{% block og_title %}Музей искусств{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Официальный сайт музея: каталог услуг, новости и билеты{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:image" content="{% static 'images/logo.png' %}">
+    <meta itemprop="name" content="Музей искусств">
+    <meta itemprop="description" content="{% block schema_description %}Официальный сайт музея искусств{% endblock %}">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/lr3.css' %}">
+    {% block page_css %}{% endblock %}
+    <title>{% block title %}Музей искусств{% endblock %}</title>
+    <script>
+    (function () {
+        var t = localStorage.getItem('museum-theme');
+        if (t === 'dark') {
+            document.documentElement.dataset.theme = 'dark';
+            document.documentElement.classList.add('dark-theme', 'night-mode');
+        }
+    })();
+    </script>
+    {% block extra_head %}{% endblock %}
 </head>
-<body>
-    <header>
-        <a href="{% url 'pages:home' %}">Главная</a> |
-        <a href="{% url 'pages:about' %}">О компании</a> |
-        <a href="{% url 'pages:news_list' %}">Новости</a> |
-        <a href="{% url 'pages:faq_list' %}">Словарь терминов</a> |
-        <a href="{% url 'pages:contacts' %}">Контакты</a> |
-        <a href="{% url 'pages:vacancies' %}">Вакансии</a> |
-        <a href="{% url 'pages:reviews' %}">Отзывы</a> |
-        <a href="{% url 'pages:promo_list' %}">Промокоды</a> |
-        <a href="{% url 'museum:exhibit_list' %}">Экспонаты</a> |
-        <a href="{% url 'museum:hall_list' %}">Залы</a> |
-        <a href="{% url 'museum:tour_list' %}">Экскурсии</a> |
-        <a href="{% url 'museum:exhibition_list' %}">Экспозиции</a> |
-        <a href="{% url 'museum:ticket_prices' %}">Тарифы</a> |
-        <a href="{% url 'museum:statistics' %}">Статистика</a> |
-        <a href="{% url 'museum:external_apis' %}">Внешние API</a> |
-        <a href="{% url 'museum:parallel_demo' %}">Параллельный код</a> |
-        {% if user.is_authenticated %}
-            <a href="{% url 'pages:profile' %}">Личный кабинет</a> |
-            {% if user.is_superuser %}<a href="{% url 'museum:admin_stats' %}">Админ-статистика</a> |{% endif %}
-            <a href="{% url 'logout' %}">Выход</a>
-        {% else %}
-            <a href="{% url 'login' %}">Вход</a> |
-            <a href="{% url 'pages:register' %}">Регистрация</a>
-        {% endif %}
+<body id="top" data-site="museum-app" data-theme="light">
+    <a href="#main-content" accesskey="1">Перейти к содержимому</a>
+
+    <header role="banner" itemscope itemtype="https://schema.org/Museum">
+        <meta itemprop="name" content="Музей искусств">
+        <div class="header-top">
+            <a class="header-brand" href="{% url 'pages:home' %}" title="На главную">
+                <img src="{% static 'images/logo.png' %}" alt="Логотип Музея искусств" width="48" height="48">
+                <strong class="brand-name">Музей искусств</strong>
+            </a>
+            <div class="header-actions">
+                <p class="header-cart">Корзина: <a href="{% url 'museum:cart' %}" title="Открыть корзину">{{ cart_count }} поз.</a></p>
+                <label class="theme-toggle-wrap" title="Переключить тему">
+                    <span class="theme-toggle-wrap__icon" aria-hidden="true">☀</span>
+                    <input type="checkbox" id="theme-toggle" role="switch" aria-label="Тёмная тема">
+                    <span class="theme-toggle-wrap__icon" aria-hidden="true">☾</span>
+                </label>
+            </div>
+        </div>
+
+        <nav class="site-nav" aria-label="Основная горизонтальная навигация">
+            <ul>
+                <li><a class="nav-link" href="{% url 'pages:home' %}">Главная</a></li>
+                <li><a class="nav-link" href="{% url 'museum:ticket_prices' %}">Каталог услуг</a></li>
+                <li><a class="nav-link" href="{% url 'museum:cart' %}">Корзина</a></li>
+                <li><a class="nav-link" href="{% url 'pages:about' %}">О компании</a></li>
+                <li><a class="nav-link" href="{% url 'pages:news_list' %}">Новости</a></li>
+                <li><a class="nav-link" href="{% url 'pages:faq_list' %}">Словарь</a></li>
+                <li><a class="nav-link" href="{% url 'pages:contacts' %}">Контакты</a></li>
+                <li><a class="nav-link" href="{% url 'pages:contacts_table' %}">Таблица контактов</a></li>
+                <li><a class="nav-link" href="{% url 'pages:js_lab' %}">Задания JS</a></li>
+                <li><a class="nav-link" href="{% url 'pages:vacancies' %}">Вакансии</a></li>
+                <li><a class="nav-link" href="{% url 'pages:reviews' %}">Отзывы</a></li>
+                <li><a class="nav-link" href="{% url 'pages:promo_list' %}">Промокоды</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-link" href="{% url 'pages:profile' %}">Кабинет</a></li>
+                    <li><a class="nav-link" href="{% url 'logout' %}">Выход</a></li>
+                {% else %}
+                    <li><a class="nav-link" href="{% url 'login' %}">Вход</a></li>
+                    <li><a class="nav-link" href="{% url 'pages:register' %}">Регистрация</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </header>
-    <main>
-        {% if messages %}
-          <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-        {% block content %}{% endblock %}
-    </main>
-    <footer>
-        <p>Таймзона: {{ user_timezone }} | Дата ({{ user_timezone }}): {{ now_local_str }} | UTC: {{ now_utc_str }}</p>
+
+    <div class="layout-wrapper">
+        <aside aria-label="Вертикальная навигация по музею">
+            <nav>
+                <h2>Разделы музея</h2>
+                <ul class="unicode-markers">
+                    <li><a href="{% url 'museum:exhibit_list' %}">Экспонаты</a></li>
+                    <li><a href="{% url 'museum:hall_list' %}">Залы</a></li>
+                    <li><a href="{% url 'museum:tour_list' %}">Экскурсии</a></li>
+                    <li><a href="{% url 'museum:exhibition_list' %}">Экспозиции</a></li>
+                    <li><a href="{% url 'museum:ticket_prices' %}">Тарифы</a></li>
+                    <li><a href="{% url 'museum:statistics' %}">Статистика</a></li>
+                    <li><a href="{% url 'pages:privacy' %}">Конфиденциальность</a></li>
+                    <li><a href="#top">Наверх страницы</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="main-content" role="main" tabindex="-1">
+            {% if messages %}
+            <section aria-live="polite" aria-label="Сообщения">
+                <ul>
+                    {% for message in messages %}
+                    <li data-level="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <footer role="contentinfo">
+        <p>
+            Таймзона: <time datetime="{{ now_local_str }}">{{ user_timezone }}</time> —
+            дата: <time datetime="{{ now_local_str }}">{{ now_local_str }}</time> |
+            UTC: <time datetime="{{ now_utc_str }}">{{ now_utc_str }}</time>
+        </p>
         <pre>{{ text_calendar }}</pre>
-        <a href="{% url 'pages:privacy' %}">Политика конфиденциальности</a>
+        <p>
+            <a href="{% url 'pages:privacy' %}">Политика конфиденциальности</a> |
+            <a href="{% static 'docs/museum_rules.txt' %}" download="museum_rules.txt">Скачать правила посещения</a> |
+            <a href="mailto:info@museum.by">info@museum.by</a> |
+            <a href="tel:+375172000000">+375 (17) 200-00-00</a>
+        </p>
+        <p><small>&copy; {% now "Y" %} Музей искусств. Все права защищены.</small></p>
+        <div class="footer-preloader" aria-hidden="true">
+            <div class="footer-preloader__rings">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <p class="footer-preloader__label">Загрузка материалов музея</p>
+        </div>
     </footer>
     {% block extra_js %}{% endblock %}
+    <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>
