@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Задания JS — Музей искусств{% endblock %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/js-lab.css' %}">
+{% endblock %}
+{% block content %}
+<article class="js-tasks">
+    <header class="js-tasks__hero">
+        <h1>Задания JS</h1>
+        <p class="page-lead">Демонстрация возможностей JavaScript: классы, Web API, визуализация данных и работа с DOM.</p>
+    </header>
+
+    <section class="task-card" id="birthdate-section" aria-labelledby="birth-h2">
+        <div class="task-card__head">
+            <span class="task-card__num">07</span>
+            <h2 id="birth-h2">Проверка даты рождения</h2>
+        </div>
+        <div class="task-card__body birthdate-block">
+            <label for="birthdate-check">Дата рождения</label>
+            <div class="task-card__row">
+                <input type="date" id="birthdate-check">
+                <button type="button" class="task-btn" id="btn-birthdate-check">Проверить</button>
+            </div>
+            <p id="birthdate-result" class="task-result"></p>
+        </div>
+    </section>
+
+    <section class="task-card" id="toys-section" aria-labelledby="toys-h2">
+        <div class="task-card__head">
+            <span class="task-card__num">08</span>
+            <h2 id="toys-h2">Классы и игрушки</h2>
+        </div>
+        <p class="task-card__desc">Найти названия наиболее дорогих игрушек, цена которых отличается от максимальной не более чем на 1 руб.</p>
+
+        <div class="toy-mode-switch">
+            <span class="toy-mode-label">Реализация: <strong id="toy-mode-label">Прототипное наследование</strong></span>
+            <div class="toy-mode-buttons">
+                <button type="button" class="task-btn task-btn--active" data-toy-mode="proto">Прототип</button>
+                <button type="button" class="task-btn task-btn--outline" data-toy-mode="class">class / extends</button>
+            </div>
+        </div>
+
+        <div class="task-card__sub toy-single-block">
+            <ul id="toy-list" class="task-list"></ul>
+            <p id="toy-result" class="task-result"></p>
+            <p id="toy-error" class="task-error" aria-live="polite"></p>
+            <form id="toy-form" class="task-form">
+                <input name="toy_name" placeholder="Название" required minlength="1">
+                <input name="toy_price" type="number" step="0.01" min="0.01" placeholder="Цена (> 0)" required>
+                <input name="toy_min_age" type="number" min="0" placeholder="От (лет, ≥ 0)">
+                <input name="toy_max_age" type="number" min="0" placeholder="До (лет, ≥ 0)">
+                <button type="submit" class="task-btn">Добавить</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="task-card" id="api-section" aria-labelledby="api-h2">
+        <div class="task-card__head">
+            <span class="task-card__num">09</span>
+            <h2 id="api-h2">Дополнительные Web API</h2>
+        </div>
+        <div class="api-demo-grid">
+            <div class="task-card__sub">
+                <h3>Геолокация</h3>
+                <button type="button" class="task-btn" id="btn-geolocation">Определить координаты</button>
+                <p id="geo-result" class="api-result"></p>
+            </div>
+            <div class="task-card__sub">
+                <h3>Синтез речи</h3>
+                <input type="text" id="speech-text" class="task-input-full" value="Добро пожаловать в музей искусств!">
+                <button type="button" class="task-btn" id="btn-speech">Произнести</button>
+            </div>
+            <div class="task-card__sub">
+                <h3>Battery API</h3>
+                <p id="battery-result" class="api-result">Загрузка…</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="task-card" id="chart-section" aria-labelledby="chart-h2">
+        <div class="task-card__head">
+            <span class="task-card__num">10</span>
+            <h2 id="chart-h2">Chart.js: arccos(x)</h2>
+        </div>
+        <p class="task-card__desc">arccos(x) = π/2 − Σ (2n)! / (4ⁿ (n!)² (2n+1)) · x^(2n+1), |x| ≤ 1</p>
+        <div class="arccos-controls">
+            <label>Членов ряда n: <input type="number" id="arccos-terms" value="20" min="1" max="50"></label>
+            <label>Шаг x: <input type="number" id="arccos-step" value="0.1" min="0.05" max="0.5" step="0.05"></label>
+            <button type="button" class="task-btn" id="btn-arccos-calc">Построить график</button>
+            <button type="button" class="task-btn task-btn--outline" id="btn-arccos-save">Сохранить в файл</button>
+        </div>
+        <div class="arccos-table-wrap">
+            <table class="arccos-table">
+                <thead>
+                    <tr>
+                        <th>x</th><th>n</th><th>F(x)</th><th>Math F(x)</th><th>eps</th>
+                    </tr>
+                </thead>
+                <tbody id="arccos-tbody"></tbody>
+            </table>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="arccos-chart" width="800" height="400"></canvas>
+        </div>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{% static 'js/age-check.js' %}"></script>
+<script src="{% static 'js/toys-prototype.js' %}"></script>
+<script src="{% static 'js/toys-class.js' %}"></script>
+<script src="{% static 'js/toys-ui.js' %}"></script>
+<script src="{% static 'js/apis-demo.js' %}"></script>
+<script src="{% static 'js/chart-arccos.js' %}"></script>
+{% endblock %}

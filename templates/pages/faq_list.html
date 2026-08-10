@@ -1,19 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}Словарь терминов{% endblock %}
+{% load static %}
+{% block title %}Словарь терминов / FAQ{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/faq.css' %}">{% endblock %}
 {% block content %}
-<h1>Словарь терминов и понятий (FAQ)</h1>
-<form method="get">
-  <input type="text" name="q" value="{{ search }}" placeholder="Поиск">
-  <button type="submit">Искать</button>
-</form>
-<ul>
-  {% for item in faq_list %}
-    <li>
-      <strong>{{ item.question }}</strong> — {{ item.answer|truncatewords:30 }}
-      <br><small>Добавлено: {{ item.added_at|date:"d/m/Y" }}</small>
-    </li>
-  {% empty %}
-    <li>Записей нет.</li>
-  {% endfor %}
-</ul>
+<article>
+    <h1>Словарь терминов и понятий</h1>
+    <p>Часто задаваемые вопросы. Нажмите на вопрос, чтобы открыть развёрнутый ответ.</p>
+
+    <form method="get" role="search" class="faq-search-form">
+        <label for="faq-q">Поиск</label>
+        <input id="faq-q" type="search" name="q" value="{{ search }}" placeholder="Термин или вопрос">
+        <button type="submit">Искать</button>
+    </form>
+
+    {% for item in faq_list %}
+    <details class="faq-item" id="faq-{{ item.pk }}" {% if forloop.first %}open{% endif %}>
+        <summary>
+            <strong>{{ item.question }}</strong>
+            <time datetime="{{ item.added_at|date:'Y-m-d' }}">{{ item.added_at|date:"d.m.Y" }}</time>
+        </summary>
+        <div>{{ item.answer|linebreaks }}</div>
+    </details>
+    {% empty %}
+    <p>Записей нет.</p>
+    {% endfor %}
+</article>
 {% endblock %}

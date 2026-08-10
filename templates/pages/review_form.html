@@ -1,19 +1,46 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Добавить отзыв{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/reviews.css' %}">{% endblock %}
 {% block content %}
-<h1>Добавить отзыв</h1>
-<form method="post" id="review-form">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Отправить</button>
-</form>
+<article>
+    <h1>Добавить отзыв</h1>
+    <p>Пользователь: <strong>{{ user.username }}</strong></p>
+
+    <form method="post" id="review-form" novalidate>
+        {% csrf_token %}
+        <p>
+            <label for="id_rating">Оценка</label>
+            {{ form.rating }}
+            {% if form.rating.errors %}<span>{{ form.rating.errors }}</span>{% endif %}
+        </p>
+        <p>
+            <label for="id_text">Текст отзыва</label>
+            {{ form.text }}
+            {% if form.text.errors %}<span>{{ form.text.errors }}</span>{% endif %}
+        </p>
+        <button type="submit">Отправить</button>
+    </form>
+
+    <p><a href="{% url 'pages:reviews' %}">Назад к отзывам</a></p>
+</article>
+{% endblock %}
+
+{% block extra_js %}
 <script>
-document.getElementById('review-form').addEventListener('submit', function(e) {
+document.getElementById('review-form').addEventListener('submit', function (e) {
   var rating = document.querySelector('[name="rating"]');
   var text = document.querySelector('[name="text"]');
-  if (!rating || !rating.value) { e.preventDefault(); alert('Выберите оценку.'); return false; }
-  if (!text || !text.value.trim()) { e.preventDefault(); alert('Введите текст отзыва.'); return false; }
+  if (!rating || !rating.value) {
+    e.preventDefault();
+    alert('Выберите оценку.');
+    return false;
+  }
+  if (!text || text.value.trim().length < 3) {
+    e.preventDefault();
+    alert('Введите текст отзыва (не менее 3 символов).');
+    return false;
+  }
 });
 </script>
-<p><a href="{% url 'pages:reviews' %}">Назад к отзывам</a></p>
 {% endblock %}

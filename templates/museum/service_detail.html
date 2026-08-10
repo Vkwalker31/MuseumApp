@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}{{ service.name }} — услуга{% endblock %}
+{% block meta_description %}{{ service.description|default:service.name|truncatewords:20 }}{% endblock %}
+{% block content %}
+<article>
+    <header>
+        <h1>{{ service.name }}</h1>
+        <p>
+            Цена:
+            <data value="{{ service.base_price }}">{{ service.base_price }} BYN</data>
+        </p>
+    </header>
+
+    {% if service.image %}
+    <figure>
+        <img src="{{ service.image.url }}"
+             alt="Изображение услуги {{ service.name }}"
+             width="400"
+             height="260"
+             loading="lazy">
+        <figcaption>{{ service.name }}</figcaption>
+    </figure>
+    {% endif %}
+
+    <section>
+        <h2>Описание</h2>
+        {% if service.description %}
+            <div>{{ service.description|linebreaks }}</div>
+        {% else %}
+            <p>Подробное описание услуги будет добавлено позднее.</p>
+        {% endif %}
+        <ul>
+            <li>Детский тариф: {{ service.is_child|yesno:"да,нет" }}</li>
+            <li>Взрослый тариф: {{ service.is_adult|yesno:"да,нет" }}</li>
+            <li>Доп. услуга: {{ service.is_extra_service|yesno:"да,нет" }}</li>
+            <li>День недели: {{ service.day_of_week|default:"любой" }}</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Добавить в корзину</h2>
+        <form method="post" action="{% url 'museum:cart_add' service.pk %}" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'museum:cart' %}">
+            <label for="qty">Количество</label>
+            <input id="qty" name="quantity" type="number" min="1" max="20" value="1" required>
+            <button type="submit">Добавить в корзину</button>
+        </form>
+    </section>
+
+    <p><a href="{% url 'museum:ticket_prices' %}">К каталогу услуг</a></p>
+</article>
+{% endblock %}

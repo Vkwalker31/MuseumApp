@@ -1,38 +1,91 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Отзывы{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/reviews.css' %}">{% endblock %}
 {% block content %}
-<h1>Отзывы</h1>
-{% if user.is_authenticated %}
-  <p><a href="{% url 'pages:review_add' %}">Добавить отзыв</a></p>
-{% else %}
-  <p><a href="{% url 'login' %}">Войдите</a> или <a href="{% url 'pages:register' %}">зарегистрируйтесь</a>, чтобы добавить отзыв.</a></p>
-{% endif %}
-<form method="get">
-  <input type="text" name="q" value="{{ search }}" placeholder="Поиск">
-  <select name="rating">
-    <option value="">Все оценки</option>
-    {% for i in "12345" %}
-      <option value="{{ i }}" {% if rating == i %}selected{% endif %}>{{ i }}</option>
-    {% endfor %}
-  </select>
-  <select name="sort">
-    <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Сначала новые</option>
-    <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>Сначала старые</option>
-    <option value="-rating" {% if sort == '-rating' %}selected{% endif %}>По оценке (высокая)</option>
-  </select>
-  <button type="submit">Применить</button>
-</form>
-<ul>
-  {% for r in page_obj %}
-    <li>
-      <strong>{{ r.author_name }}</strong> — {{ r.rating }}/5 ({{ r.created_at|date:"d/m/Y" }})<br>
-      {{ r.text }}
-    </li>
-  {% empty %}
-    <li>Отзывов пока нет.</li>
-  {% endfor %}
-</ul>
-{% if page_obj.has_other_pages %}
-  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
-{% endif %}
+<article>
+    <h1>Отзывы посетителей</h1>
+
+    {% if user.is_authenticated %}
+    <p><a href="{% url 'pages:review_add' %}">Добавить отзыв</a></p>
+    {% else %}
+    <p>
+        Чтобы оставить отзыв,
+        <a href="{% url 'login' %}?next={% url 'pages:review_add' %}">войдите</a>
+        или <a href="{% url 'pages:register' %}">зарегистрируйтесь</a>.
+    </p>
+    {% endif %}
+
+    <form method="get" class="reviews-filter-form">
+        <p>
+            <label for="rev-q">Поиск</label>
+            <input id="rev-q" type="search" name="q" value="{{ search }}" placeholder="Автор или текст">
+        </p>
+        <p>
+            <label for="rev-rating">Оценка</label>
+            <select id="rev-rating" name="rating">
+                <option value="">Все оценки</option>
+                {% for i in "12345" %}
+                <option value="{{ i }}" {% if rating == i %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="rev-sort">Сортировка</label>
+            <select id="rev-sort" name="sort">
+                <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Сначала новые</option>
+                <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>Сначала старые</option>
+                <option value="-rating" {% if sort == '-rating' %}selected{% endif %}>По оценке (высокая)</option>
+                <option value="rating" {% if sort == 'rating' %}selected{% endif %}>По оценке (низкая)</option>
+            </select>
+        </p>
+        <button type="submit">Применить</button>
+    </form>
+
+    <fieldset class="form-demo">
+        <legend>Пример полей формы</legend>
+        <p class="demo-row">
+            <label for="demo-optional">Необязательное поле</label>
+            <input id="demo-optional" type="text" placeholder="optional">
+        </p>
+        <p class="demo-row">
+            <label for="demo-required">Обязательное поле</label>
+            <input id="demo-required" type="text" required placeholder="required">
+        </p>
+        <p class="demo-row">
+            <label for="demo-disabled" class="disabled-demo">Заблокированное</label>
+            <input id="demo-disabled" type="text" disabled value="недоступно">
+        </p>
+        <p class="demo-row">
+            <label for="demo-range">Число 1–10</label>
+            <input id="demo-range" type="number" min="1" max="10" value="15">
+        </p>
+        <p class="demo-row">
+            <input id="demo-check" type="checkbox" checked>
+            <label for="demo-check">Включённый флажок</label>
+        </p>
+        <p class="demo-row">
+            <input id="demo-radio" type="radio" name="demo-radio" checked>
+            <label for="demo-radio">Выбранный переключатель</label>
+        </p>
+    </fieldset>
+
+    <ul class="reviews-list">
+        {% for r in page_obj %}
+        <li>
+            <article>
+                <h2>{% if r.user %}{{ r.user.username }}{% else %}{{ r.author_name }}{% endif %} — оценка {{ r.rating }}/5</h2>
+                <p><time datetime="{{ r.created_at|date:'c' }}">{{ r.created_at|date:"d.m.Y" }}</time></p>
+                <blockquote><p>{{ r.text }}</p></blockquote>
+            </article>
+        </li>
+        {% empty %}
+        <li>Отзывов пока нет.</li>
+        {% endfor %}
+    </ul>
+
+    {% if page_obj.has_other_pages %}
+    {% include 'includes/pagination.html' %}
+    {% endif %}
+</article>
 {% endblock %}

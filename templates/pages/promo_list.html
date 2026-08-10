@@ -1,21 +1,56 @@
 {% extends 'base.html' %}
-{% block title %}Промокоды и купоны{% endblock %}
+{% load static %}
+{% block title %}Промокоды / купоны{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/promo.css' %}">{% endblock %}
 {% block content %}
-<h1>Промокоды и купоны</h1>
-<h2>Действующие</h2>
-<ul>
-  {% for p in active %}
-    <li><strong>{{ p.code }}</strong> — {{ p.description }} (скидка: {{ p.discount_percent|default:p.discount_amount }})</li>
-  {% empty %}
-    <li>Нет действующих промокодов.</li>
-  {% endfor %}
-</ul>
-<h2>Архив</h2>
-<ul>
-  {% for p in archive %}
-    <li><strong>{{ p.code }}</strong> — {{ p.description }}</li>
-  {% empty %}
-    <li>Нет записей в архиве.</li>
-  {% endfor %}
-</ul>
+<article>
+    <h1>Промокоды и купоны</h1>
+
+    <section class="promo-section">
+        <h2>Действующие</h2>
+        <table class="promo-table">
+            <caption>Активные промокоды музея</caption>
+            <colgroup>
+                <col class="col-code">
+                <col>
+                <col class="col-price">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">Код</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Скидка</th>
+                    <th scope="col">Действует до</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in active %}
+                <tr>
+                    <th scope="row"><code>{{ p.code }}</code></th>
+                    <td>{{ p.description }}</td>
+                    <td>{% if p.discount_percent %}{{ p.discount_percent }}%{% elif p.discount_amount %}{{ p.discount_amount }} BYN{% else %}—{% endif %}</td>
+                    <td>{% if p.valid_until %}<time datetime="{{ p.valid_until|date:'c' }}">{{ p.valid_until|date:"d.m.Y" }}</time>{% else %}без срока{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">Нет действующих промокодов.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="promo-section">
+        <h2>Архив</h2>
+        <ul class="promo-archive-list">
+            {% for p in archive %}
+            <li>
+                <del><code>{{ p.code }}</code></del> — {{ p.description }}
+                {% if p.discount_percent %}(было {{ p.discount_percent }}%){% endif %}
+            </li>
+            {% empty %}
+            <li>Нет записей в архиве.</li>
+            {% endfor %}
+        </ul>
+    </section>
+</article>
 {% endblock %}

@@ -1,33 +1,98 @@
 {% extends 'base.html' %}
-{% block title %}Стоимость посещения{% endblock %}
+{% load static %}
+{% block title %}Каталог услуг и тарифов{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/catalog.css' %}">{% endblock %}
 {% block content %}
-<h1>Стоимость посещения</h1>
-<p>Тарифы зависят от дня недели, возраста и доп. услуг. Промокоды — на странице <a href="{% url 'pages:promo_list' %}">Промокоды</a>.</p>
-<table border="1" cellpadding="6">
-  <tr>
-    <th>Наименование</th>
-    <th>Цена</th>
-    <th>День недели (0–6)</th>
-    <th>Детский</th>
-    <th>Взрослый</th>
-    <th>Доп. услуга</th>
-  </tr>
-  {% for p in prices %}
-  <tr>
-    <td>{{ p.name }}</td>
-    <td>{{ p.base_price }}</td>
-    <td>{{ p.day_of_week|default:"любой" }}</td>
-    <td>{{ p.is_child|yesno:"да,нет" }}</td>
-    <td>{{ p.is_adult|yesno:"да,нет" }}</td>
-    <td>{{ p.is_extra_service|yesno:"да,нет" }}</td>
-  </tr>
-  {% empty %}
-  <tr><td colspan="6">Тарифы пока не заданы (добавьте в админке).</td></tr>
-  {% endfor %}
-</table>
-{% if user.is_authenticated and not user.is_superuser %}
-  <p><a href="{% url 'museum:visitor_tickets' %}">Купить билет</a></p>
-{% elif not user.is_authenticated %}
-  <p><a href="{% url 'login' %}">Войдите</a>, чтобы купить билет.</p>
-{% endif %}
+<article>
+    <h1>Каталог услуг / тарифов</h1>
+    <p>Тарифы зависят от дня недели, возраста и доп. услуг.
+        Промокоды — на странице <a href="{% url 'pages:promo_list' %}">Промокоды</a>.</p>
+
+    <section aria-label="Каталог карточками с пагинацией">
+        <h2>Услуги (клиентская пагинация)</h2>
+        <label>Элементов на странице:
+            <select id="catalog-per-page">
+                <option value="3" selected>3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+            </select>
+        </label>
+        <div class="catalog-cards-grid" id="catalog-cards"></div>
+        <nav class="catalog-pagination" id="catalog-pagination" aria-label="Навигация по каталогу"></nav>
+    </section>
+
+    <table class="tariffs-table">
+        <caption>Стоимость посещения музея</caption>
+        <colgroup>
+            <col class="col-category">
+            <col>
+            <col class="col-price">
+            <col><col><col><col>
+            <col class="col-action">
+        </colgroup>
+        <thead>
+            <tr>
+                <th id="th-cat" scope="col">Категория</th>
+                <th id="th-name" scope="col">Наименование</th>
+                <th id="th-price" scope="col">Цена, BYN</th>
+                <th id="th-day" scope="col">День недели (0–6)</th>
+                <th id="th-child" scope="col">Детский</th>
+                <th id="th-adult" scope="col">Взрослый</th>
+                <th id="th-extra" scope="col">Доп. услуга</th>
+                <th id="th-action" scope="col">Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in price_groups %}
+                {% for p in group.items %}
+                <tr>
+                    {% if forloop.first %}
+                    <th id="cat-{{ forloop.parentloop.counter }}" scope="rowgroup" rowspan="{{ group.rowspan }}" headers="th-cat">
+                        {{ group.category }}
+                    </th>
+                    {% endif %}
+                    <th id="row-{{ p.pk }}" scope="row" headers="th-name th-cat cat-{{ forloop.parentloop.counter }}">
+                        <a href="{% url 'museum:service_detail' p.pk %}">{{ p.name }}</a>
+                    </th>
+                    <td headers="th-price row-{{ p.pk }}">{{ p.base_price }}</td>
+                    <td headers="th-day row-{{ p.pk }}">{{ p.day_of_week|default:"любой" }}</td>
+                    <td headers="th-child row-{{ p.pk }}">{{ p.is_child|yesno:"да,нет" }}</td>
+                    <td headers="th-adult row-{{ p.pk }}">{{ p.is_adult|yesno:"да,нет" }}</td>
+                    <td headers="th-extra row-{{ p.pk }}">{{ p.is_extra_service|yesno:"да,нет" }}</td>
+                    <td headers="th-action row-{{ p.pk }}">
+                        <a href="{% url 'museum:service_detail' p.pk %}">Подробнее</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% empty %}
+            <tr><td colspan="8">Тарифы пока не заданы.</td></tr>
+            {% endfor %}
+        </tbody>
+        {% if prices %}
+        <tfoot>
+            <tr>
+                <th scope="row" colspan="5" headers="th-cat th-name">Всего тарифов</th>
+                <td colspan="3" headers="th-price">{{ prices|length }}</td>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+
+    <p><a href="{% url 'museum:cart' %}">Перейти в корзину</a></p>
+</article>
+
+<script type="application/json" id="catalog-services-data">{{ services_json|safe }}</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/card-3d.js' %}"></script>
+<script src="{% static 'js/catalog-pagination.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var dataEl = document.getElementById('catalog-services-data');
+    var items = [];
+    try { items = JSON.parse(dataEl.textContent); } catch (e) {}
+    new CatalogPagination({ items: items });
+});
+</script>
 {% endblock %}

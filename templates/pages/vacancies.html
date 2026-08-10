@@ -1,15 +1,21 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Вакансии{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/vacancies.css' %}">{% endblock %}
 {% block content %}
-<h1>Вакансии</h1>
-<ul>
-  {% for v in vacancies %}
-    <li>
-      <h3>{{ v.title }}</h3>
-      <p>{{ v.description|linebreaks }}</p>
-    </li>
-  {% empty %}
-    <li>Нет активных вакансий.</li>
-  {% endfor %}
-</ul>
+<article>
+    <h1>Вакансии</h1>
+    <p>Открытые позиции в музее.</p>
+    <div class="vacancies-list">
+        {% for v in vacancies %}
+        <section class="vacancy-card" id="vacancy-{{ v.pk }}">
+            <h2>{{ v.title }}</h2>
+            <p>Опубликовано: <time datetime="{{ v.created_at|date:'Y-m-d' }}">{{ v.created_at|date:"d.m.Y" }}</time></p>
+            <div>{{ v.description|linebreaks }}</div>
+        </section>
+        {% empty %}
+        <p>Нет активных вакансий.</p>
+        {% endfor %}
+    </div>
+</article>
 {% endblock %}

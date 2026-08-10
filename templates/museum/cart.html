@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Корзина заказа{% endblock %}
+{% block content %}
+<article>
+    <h1>Корзина заказа</h1>
+
+    {% if items %}
+    <table>
+        <caption>Список добавленных услуг</caption>
+        <thead>
+            <tr>
+                <th scope="col">Услуга</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Количество</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>
+                    <a href="{% url 'museum:service_detail' item.service.pk %}">{{ item.service.name }}</a>
+                </td>
+                <td><data value="{{ item.service.base_price }}">{{ item.service.base_price }}</data></td>
+                <td>
+                    <form method="post" action="{% url 'museum:cart_update' item.service.pk %}" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="decrease" title="Уменьшить количество">−</button>
+                    </form>
+                    <span>{{ item.quantity }}</span>
+                    <form method="post" action="{% url 'museum:cart_update' item.service.pk %}" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="increase" title="Увеличить количество">+</button>
+                    </form>
+                </td>
+                <td>{{ item.line_total }}</td>
+                <td>
+                    <form method="post" action="{% url 'museum:cart_remove' item.service.pk %}">
+                        {% csrf_token %}
+                        <button type="submit">Удалить из корзины</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th scope="row" colspan="3">Итого</th>
+                <td colspan="2"><strong>{{ total }} BYN</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <p>
+        <a href="{% url 'museum:checkout' %}">Оплатить</a> |
+        <a href="{% url 'museum:ticket_prices' %}">Продолжить выбор</a>
+    </p>
+    {% else %}
+    <p>Корзина пуста. Перейдите в <a href="{% url 'museum:ticket_prices' %}">каталог услуг</a>.</p>
+    {% endif %}
+</article>
+{% endblock %}

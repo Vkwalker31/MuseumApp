@@ -1,23 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}Новости{% endblock %}
+{% load static %}
+{% block title %}Новости музея{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/news.css' %}">{% endblock %}
 {% block content %}
-<h1>Новости</h1>
-<form method="get">
-  <input type="text" name="q" value="{{ search }}" placeholder="Поиск">
-  <button type="submit">Искать</button>
-</form>
-<ul>
-  {% for item in page_obj %}
-    <li>
-      <h3><a href="{% url 'pages:news_detail' item.pk %}">{{ item.title }}</a></h3>
-      <p>{{ item.summary }}</p>
-      {% if item.image %}<img src="{{ item.image.url }}" alt="" width="200">{% endif %}
-    </li>
-  {% empty %}
-    <li>Новостей нет.</li>
-  {% endfor %}
-</ul>
-{% if page_obj.has_other_pages %}
-  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
-{% endif %}
+<article>
+    <h1>Новости</h1>
+    <form method="get" role="search" class="news-search-form">
+        <p>
+            <label for="q">Поиск по новостям</label>
+            <input id="q" type="search" name="q" value="{{ search }}" placeholder="Найти статью">
+        </p>
+        <button type="submit">Искать</button>
+    </form>
+
+    <ul class="news-list">
+        {% for item in page_obj %}
+        <li>
+            <article class="news-card">
+                {% if item.image %}
+                <figure>
+                    <img src="{{ item.image.url }}" alt="Иллюстрация: {{ item.title }}" width="280" height="180" loading="lazy">
+                    <figcaption>{{ item.title }}</figcaption>
+                </figure>
+                {% endif %}
+                <div class="news-card__body">
+                    <h2>{{ item.title }}</h2>
+                    <p class="news-summary">{{ item.summary }}</p>
+                    <p><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d.m.Y" }}</time></p>
+                    <p><a class="read-more" href="{% url 'pages:news_detail' item.pk %}">Читать далее</a></p>
+                </div>
+            </article>
+        </li>
+        {% empty %}
+        <li>Новостей нет.</li>
+        {% endfor %}
+    </ul>
+
+    {% if page_obj.has_other_pages %}
+    {% include 'includes/pagination.html' %}
+    {% endif %}
+</article>
 {% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}Оплата заказа{% endblock %}
+{% block content %}
+<article>
+    <h1>Оплата товаров</h1>
+    <p>Проверьте заказ и заполните платёжные данные.</p>
+
+    <section>
+        <h2>Состав заказа</h2>
+        <ul>
+            {% for item in items %}
+            <li>{{ item.service.name }} × {{ item.quantity }} = {{ item.line_total }} BYN</li>
+            {% endfor %}
+        </ul>
+        <p>Сумма к оплате: <strong>{{ total }} BYN</strong></p>
+    </section>
+
+    <section>
+        <h2>Форма оплаты</h2>
+        <form method="post" action="{% url 'museum:checkout' %}" id="payment-form" novalidate>
+            {% csrf_token %}
+
+            <fieldset>
+                <legend>Контактные данные</legend>
+                <p>
+                    <label for="payer_name">ФИО плательщика</label>
+                    <input id="payer_name" name="payer_name" type="text" required minlength="3"
+                           maxlength="200" placeholder="Иванов Иван Иванович"
+                           value="{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}">
+                </p>
+                <p>
+                    <label for="payer_email">Электронная почта</label>
+                    <input id="payer_email" name="payer_email" type="email" required
+                           placeholder="visitor@example.com"
+                           value="{% if user.is_authenticated %}{{ user.email }}{% endif %}">
+                </p>
+                <p>
+                    <label for="payer_phone">Телефон</label>
+                    <input id="payer_phone" name="payer_phone" type="tel" required
+                           pattern="\+375\s?\((25|29|33|44)\)\s?\d{3}-\d{2}-\d{2}"
+                           title="Формат: +375 (29) XXX-XX-XX"
+                           placeholder="+375 (29) 123-45-67">
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Способ оплаты</legend>
+                <p>
+                    <label>
+                        <input type="radio" name="pay_method" value="card" required checked>
+                        Банковская карта
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <input type="radio" name="pay_method" value="erip">
+                        ЕРИП
+                    </label>
+                </p>
+                <p>
+                    <label for="card_number">Номер карты (демо)</label>
+                    <input id="card_number" name="card_number" type="text" inputmode="numeric"
+                           pattern="[0-9]{16}" maxlength="16" placeholder="ACCT-000035"
+                           autocomplete="cc-number">
+                </p>
+                <p>
+                    <label for="promo_code">Промокод</label>
+                    <input id="promo_code" name="promo_code" type="text" maxlength="50"
+                           value="{{ promo_code }}" list="promo-suggestions" placeholder="WELCOME10">
+                    <datalist id="promo-suggestions">
+                        <option value="WELCOME10">
+                        <option value="MUSEUM5">
+                    </datalist>
+                </p>
+                <p>
+                    <label for="visit_date">Желаемая дата визита</label>
+                    <input id="visit_date" name="visit_date" type="date" required>
+                </p>
+                <p>
+                    <label for="comment">Комментарий</label>
+                    <textarea id="comment" name="comment" rows="3" maxlength="500"
+                              placeholder="Особые пожелания"></textarea>
+                </p>
+                <p>
+                    <label>
+                        <input type="checkbox" name="agree" value="1" required>
+                        Согласен с <a href="{% url 'pages:privacy' %}" target="_blank">политикой конфиденциальности</a>
+                    </label>
+                </p>
+            </fieldset>
+
+            <button type="submit">Оплатить</button>
+            <a href="{% url 'museum:cart' %}">Вернуться в корзину</a>
+        </form>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('payment-form').addEventListener('submit', function (e) {
+  var phone = document.getElementById('payer_phone');
+  var email = document.getElementById('payer_email');
+  var agree = document.querySelector('[name="agree"]');
+  if (!email.checkValidity()) {
+    e.preventDefault();
+    alert('Укажите корректный email.');
+    return false;
+  }
+  if (!phone.checkValidity()) {
+    e.preventDefault();
+    alert('Телефон в формате +375 (29) XXX-XX-XX.');
+    return false;
+  }
+  if (!agree.checked) {
+    e.preventDefault();
+    alert('Необходимо согласие с политикой конфиденциальности.');
+    return false;
+  }
+});
+</script>
+{% endblock %}

@@ -1,10 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ news.title }}{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/news.css' %}">{% endblock %}
 {% block content %}
-<h1>{{ news.title }}</h1>
-{% if news.image %}<img src="{{ news.image.url }}" alt="">{% endif %}
-<p>{{ news.summary }}</p>
-<div>{{ news.content|linebreaks }}</div>
-<p>Дата: {{ news.created_at|date:"d/m/Y" }}</p>
-<a href="{% url 'pages:news_list' %}">К списку новостей</a>
+<article class="news-full article-body">
+    <header>
+        <h1>{{ news.title }}</h1>
+        <p>Опубликовано: <time datetime="{{ news.created_at|date:'c' }}">{{ news.created_at|date:"d.m.Y H:i" }}</time></p>
+    </header>
+
+    {% if news.image %}
+    <figure>
+        <img src="{{ news.image.url }}" alt="Иллюстрация к новости «{{ news.title }}»" width="640" height="360" loading="lazy">
+        <figcaption>{{ news.title }}</figcaption>
+    </figure>
+    {% endif %}
+
+    <p><em>{{ news.summary }}</em></p>
+
+    <section class="news-content" aria-label="Полный текст новости">
+        {% for paragraph in news.content.splitlines %}
+            {% if paragraph.strip %}
+            <p>{{ paragraph }}</p>
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    <blockquote cite="{% url 'pages:about' %}">
+        <p>«{{ news.summary }}» — пресс-служба Музея искусств.</p>
+    </blockquote>
+
+    <footer>
+        <p><a href="{% url 'pages:news_list' %}">К списку новостей</a></p>
+    </footer>
+</article>
 {% endblock %}

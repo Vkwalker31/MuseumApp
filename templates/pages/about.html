@@ -1,13 +1,129 @@
 {% extends 'base.html' %}
-{% block title %}О компании{% endblock %}
+{% load static %}
+{% block title %}О компании — Музей искусств{% endblock %}
+{% block meta_description %}Информация о музее: история, реквизиты, видео, сертификат{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/about.css' %}">{% endblock %}
 {% block content %}
-<h1>О компании</h1>
-{% for block in blocks %}
-  <section>
-    <h2>{{ block.title }}</h2>
-    <p>{{ block.content|linebreaks }}</p>
-  </section>
-{% empty %}
-  <p>Информация пока не добавлена.</p>
-{% endfor %}
+<article class="article-body">
+    <header>
+        <h1>О компании</h1>
+        {% if profile %}
+            <p><strong>{{ profile.name }}</strong></p>
+            <figure class="about-logo-wrap">
+                {% if profile.logo %}
+                <img src="{{ profile.logo.url }}" alt="Логотип {{ profile.name }}" width="160" height="160">
+                {% else %}
+                <img src="{% static 'images/logo.png' %}" alt="Логотип музея" width="96" height="96">
+                {% endif %}
+                <figcaption>Логотип организации</figcaption>
+            </figure>
+        {% endif %}
+    </header>
+
+    {% for block in blocks %}
+    <section id="about-block-{{ block.pk }}">
+        <h2>{{ block.title }}</h2>
+        <div>{{ block.content|linebreaks }}</div>
+    </section>
+    {% empty %}
+    <p>Текстовые блоки о компании пока не добавлены.</p>
+    {% endfor %}
+
+    <section id="history">
+        <h2>История по годам</h2>
+        <ol>
+            {% for event in history %}
+            <li>
+                <time datetime="{{ event.year }}">{{ event.year }}</time> —
+                <strong>{{ event.title }}</strong>
+                {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+            </li>
+            {% empty %}
+            <li>История будет дополнена.</li>
+            {% endfor %}
+        </ol>
+    </section>
+
+    <section id="media">
+        <h2>Видео и аудио</h2>
+        {% include 'includes/media_section.html' %}
+    </section>
+
+    <section id="map">
+        <h2>Как нас найти</h2>
+        <iframe title="Карта расположения музея" width="100%" height="300"
+            src="{% if profile and profile.map_embed_url %}{{ profile.map_embed_url }}{% else %}https://www.openstreetmap.org/export/embed.html?bbox=27.55%2C53.89%2C27.57%2C53.91&amp;layer=mapnik{% endif %}"
+            loading="lazy"></iframe>
+    </section>
+
+    <section id="requisites">
+        <h2>Реквизиты</h2>
+        {% if profile and profile.requisites %}
+        <pre>{{ profile.requisites }}</pre>
+        {% else %}
+        <pre>УНП 100000000
+р/с BY00 BANK 0000 0000 0000 0000 0000
+Банк: ОАО «Банк»
+Юр. адрес: г. Минск, ул. Культуры, 1</pre>
+        {% endif %}
+    </section>
+
+    <section id="certificate">
+        <h2>Сертификат аккредитации</h2>
+        {% include 'includes/museum_certificate.html' %}
+    </section>
+
+    <section id="quote">
+        <h2>Цитата основателя</h2>
+        <blockquote cite="https://museum.example/about" lang="ru">
+            <p>Музей — это диалог поколений, а не склад редкостей.</p>
+            <footer>— <cite>Из устава музея, 1998</cite></footer>
+        </blockquote>
+        <blockquote lang="en">
+            <p>Art belongs to everyone who seeks beauty.</p>
+            <footer>— <cite>Museum charter, 1998</cite></footer>
+        </blockquote>
+        <p>
+            Термин <dfn id="dfn-exposition"><strong>экспозиция</strong></dfn> означает
+            упорядоченный показ произведений искусства в пространстве зала.
+        </p>
+    </section>
+
+    <section id="form-generator" aria-labelledby="fg-h2">
+        <h2 id="fg-h2">Генератор textarea</h2>
+        <label><input type="checkbox" id="chk-add-textarea"> Добавить textarea с настройкой атрибутов</label>
+        <div id="textarea-generator-panel" hidden>
+            <button type="button" id="btn-add-textarea">+ Ещё textarea</button>
+            <button type="button" id="btn-remove-textarea">Удалить выбранный</button>
+            <div id="generated-textareas"></div>
+        </div>
+    </section>
+
+    <section id="scroll-statues" class="scroll-statues-section" aria-labelledby="statues-h2">
+        <h2 id="statues-h2">Скульптурная коллекция — анимация при скролле</h2>
+        <p class="scroll-fade-in">Статуи приближаются и увеличиваются при прокрутке страницы.</p>
+        <div class="scroll-statues-track">
+            <figure class="scroll-statue scroll-fade-in">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/The_Thinker%2C_Rodin.jpg?width=300"
+                     alt="Статуя «Мыслитель»" width="200" height="280" loading="lazy">
+                <figcaption>«Мыслитель», Роден</figcaption>
+            </figure>
+            <figure class="scroll-statue scroll-fade-in">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Winged_Victory_of_Samothrace.jpg?width=300"
+                     alt="Ника Самофракийская" width="200" height="280" loading="lazy">
+                <figcaption>Ника Самофракийская</figcaption>
+            </figure>
+            <figure class="scroll-statue scroll-fade-in">
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Terracotta_Army_Pit_1_in_Xi%27an_2.jpg?width=300"
+                     alt="Терракотовый воин" width="200" height="280" loading="lazy">
+                <figcaption>Терракотовый воин</figcaption>
+            </figure>
+        </div>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/form-generator.js' %}"></script>
+<script src="{% static 'js/scroll-statues.js' %}"></script>
 {% endblock %}

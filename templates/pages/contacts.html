@@ -1,16 +1,44 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Контакты{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/contacts.css' %}">{% endblock %}
 {% block content %}
-<h1>Контакты</h1>
-{% for c in contacts_list %}
-  <div>
-    {% if c.photo %}<img src="{{ c.photo.url }}" alt="" width="120">{% endif %}
-    <h3>{{ c.name }}</h3>
-    <p>{{ c.role }}</p>
-    <p>{{ c.description|linebreaks }}</p>
-    <p>Тел.: {{ c.phone|default:"—" }} | Email: {{ c.email|default:"—" }}</p>
-  </div>
-{% empty %}
-  <p>Контакты не добавлены.</p>
-{% endfor %}
+<article>
+    <h1>Контакты</h1>
+    <p class="page-lead">Сотрудники музея и способы связи. <a href="{% url 'pages:contacts_table' %}">Интерактивная таблица контактов</a></p>
+
+    <div class="contacts-grid">
+        {% for c in contacts_list %}
+        <section class="contact-card" id="contact-{{ c.pk }}">
+            <figure>
+                {% if c.photo %}
+                <img src="{{ c.photo.url }}" alt="Фото: {{ c.name }}" width="160" height="160" loading="lazy">
+                {% else %}
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect fill='%23ccc' width='160' height='160'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23666'%3EФото%3C/text%3E%3C/svg%3E"
+                     alt="Фото отсутствует" width="160" height="160">
+                {% endif %}
+                <figcaption>{{ c.role }}</figcaption>
+            </figure>
+            <div class="contact-card__info">
+                <h2>{{ c.name }}</h2>
+                <p><strong>{{ c.role }}</strong></p>
+                {% if c.description %}<div>{{ c.description|linebreaks }}</div>{% endif %}
+                <address>
+                    {% if c.phone %}Тел.: <a href="tel:{{ c.phone|cut:' '|cut:'('|cut:')' }}">{{ c.phone }}</a><br>{% endif %}
+                    {% if c.email %}Email: <a href="mailto:{{ c.email }}">{{ c.email }}</a>{% endif %}
+                </address>
+            </div>
+        </section>
+        {% empty %}
+        <p>Контакты не добавлены.</p>
+        {% endfor %}
+    </div>
+
+    {% if profile and profile.map_embed_url %}
+    <section class="contacts-map">
+        <h2>Карта</h2>
+        <iframe title="Карта музея" width="100%" height="280" src="{{ profile.map_embed_url }}" loading="lazy"></iframe>
+    </section>
+    {% endif %}
+</article>
 {% endblock %}

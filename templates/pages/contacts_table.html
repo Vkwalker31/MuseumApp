@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Таблица контактов{% endblock %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/contacts-table.css' %}">
+{% endblock %}
+{% block content %}
+<article>
+    <h1>Таблица сотрудников</h1>
+    <p class="page-lead">Данные загружаются с сервера. Сортировка, фильтрация, пагинация и добавление записей.</p>
+
+    <div id="contacts-table-app" data-api-url="{% url 'pages:api_contacts' %}">
+        <div class="contacts-toolbar">
+            <input type="search" id="contacts-filter" placeholder="Поиск по таблице…">
+            <button type="button" id="btn-filter">Найти</button>
+            <button type="button" id="btn-add-toggle">Добавить</button>
+            <button type="button" id="btn-bonus">Премировать</button>
+        </div>
+
+        <div id="contact-add-wrap" class="contact-add-wrap">
+            <form id="contact-add-form" novalidate>
+                <label>ФИО <input type="text" id="add-name" required></label>
+                <label>URL фото <input type="url" id="add-photo" placeholder="http://site.ru/photo.html" required></label>
+                <label>Должность <input type="text" id="add-role" required></label>
+                <label>Описание работ <textarea id="add-desc" rows="3" required></textarea></label>
+                <label>Телефон <input type="tel" id="add-phone" placeholder="+375 (29) 111-22-33" required></label>
+                <label>Email <input type="email" id="add-email" required></label>
+                <p id="validation-result"></p>
+                <button type="button" id="btn-add-submit" disabled>Добавить в таблицу</button>
+            </form>
+        </div>
+
+        <div class="contacts-table-wrap">
+            <table class="contacts-table">
+                <thead id="contacts-thead">
+                    <tr>
+                        <th scope="col">Выбор</th>
+                        <th scope="col" data-sort="name">ФИО<span class="sort-arrow"></span></th>
+                        <th scope="col">Фото</th>
+                        <th scope="col" data-sort="role">Должность<span class="sort-arrow"></span></th>
+                        <th scope="col" data-sort="description">Описание<span class="sort-arrow"></span></th>
+                        <th scope="col" data-sort="phone">Телефон<span class="sort-arrow"></span></th>
+                        <th scope="col" data-sort="email">Email<span class="sort-arrow"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="contacts-tbody"></tbody>
+            </table>
+        </div>
+
+        <nav class="contacts-pagination" id="contacts-pagination" aria-label="Пагинация таблицы"></nav>
+
+        <div id="contact-detail" class="contact-detail" aria-live="polite"></div>
+        <div id="bonus-result" class="bonus-result" aria-live="polite"></div>
+    </div>
+</article>
+
+<div class="preloader-overlay" id="contacts-preloader" aria-hidden="true">
+    <div class="preloader-overlay__spinner" aria-label="Загрузка"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/validators.js' %}"></script>
+<script src="{% static 'js/preloader-util.js' %}"></script>
+<script src="{% static 'js/contacts-table.js' %}"></script>
+{% endblock %}

@@ -1,11 +1,212 @@
 {% extends 'base.html' %}
-{% block title %}Главная{% endblock %}
+{% load static %}
+{% block title %}Главная — Музей искусств{% endblock %}
+{% block meta_description %}Главная страница Музея искусств: каталог услуг, новости и партнёры{% endblock %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/slider.css' %}">
+{% endblock %}
 {% block content %}
-<h1>Музей</h1>
-{% if article %}
-  <h2>{{ article.title }}</h2>
-  <p>{{ article.content|truncatewords:50 }}</p>
-{% else %}
-  <p>Нет опубликованных статей.</p>
-{% endif %}
+<div class="page-preloader" id="page-preloader" aria-live="polite" aria-label="Загрузка страницы">
+    <div class="preloader-circles" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <p class="preloader-label">Музей искусств</p>
+</div>
+
+<article class="article-body">
+    <header>
+        <h1>Музей искусств</h1>
+
+        <section class="gallery-animation" aria-label="Анимация зала галереи">
+            <div class="gallery-hall">
+                <div class="gallery-wall gallery-wall--left">
+                    <div class="painting painting--1" role="img" aria-label="Картина 1"></div>
+                    <div class="painting painting--2" role="img" aria-label="Картина 2"></div>
+                </div>
+                <div class="gallery-center">
+                    <div class="rotating-sphere" aria-hidden="true"></div>
+                    <h2 class="company-name-anim brand-name">Музей искусств</h2>
+                </div>
+                <div class="gallery-wall gallery-wall--right">
+                    <div class="painting painting--3" role="img" aria-label="Картина 3"></div>
+                    <div class="painting painting--4" role="img" aria-label="Картина 4"></div>
+                </div>
+            </div>
+        </section>
+
+        {% if profile and profile.logo %}
+            <figure>
+                <img src="{{ profile.logo.url }}" alt="Логотип {{ profile.name }}" width="120" height="120">
+                <figcaption>Официальный логотип {{ profile.name }}</figcaption>
+            </figure>
+        {% else %}
+            <figure>
+                <img src="{% static 'images/logo.png' %}" alt="Логотип Музея искусств" width="96" height="96"
+                     srcset="{% static 'images/logo.png' %} 1x, {% static 'images/logo.png' %} 2x"
+                     sizes="96px">
+                <figcaption>Бренд музея</figcaption>
+            </figure>
+        {% endif %}
+        <p class="page-lead note-context">
+            Добро пожаловать в пространство, где <em>живопись</em>, <strong>скульптура</strong>
+            и <mark>графика</mark> встречаются с современной аудиторией.
+            <abbr title="Музей искусств">МИ</abbr> приглашает на экскурсии и тематические программы.
+        </p>
+        <p class="small-caps-block">Культурное наследие — наша общая ценность</p>
+    </header>
+
+    <section id="banners" aria-label="Слайдер акций и анонсов">
+        <h2>Акции и анонсы</h2>
+
+        <form class="slider-controls" id="slider-admin" aria-label="Настройки слайдера">
+            <label><input type="checkbox" id="slider-loop" checked> loop</label>
+            <label><input type="checkbox" id="slider-navs" checked> navs</label>
+            <label><input type="checkbox" id="slider-pags" checked> pags</label>
+            <label><input type="checkbox" id="slider-auto" checked> auto</label>
+            <label><input type="checkbox" id="slider-hover" checked> stopMouseHover</label>
+            <label>delay (сек) <input type="number" id="slider-delay" value="5" min="1" max="30"></label>
+        </form>
+
+        <div id="main-slider" aria-live="polite"></div>
+    </section>
+
+    <section id="catalog" aria-label="Каталог услуг">
+        <h2>Каталог услуг</h2>
+        <p>Выберите билет или дополнительную услугу:</p>
+        <ul class="catalog-grid">
+            {% for service in services %}
+            <li class="card-3d">
+                <a href="{% url 'museum:service_detail' service.pk %}">
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" alt="{{ service.name }}" width="160" height="100" loading="lazy">
+                    {% endif %}
+                    <span>{{ service.name }}</span>
+                </a>
+                <data value="{{ service.base_price }}">{{ service.base_price }} BYN</data>
+            </li>
+            {% empty %}
+            <li>Услуги пока не добавлены. Смотрите раздел <a href="{% url 'museum:ticket_prices' %}">Тарифы</a>.</li>
+            {% endfor %}
+        </ul>
+        <p><a href="{% url 'museum:ticket_prices' %}">Весь каталог тарифов</a></p>
+    </section>
+
+    <section id="latest-article" aria-label="Последняя статья">
+        <h2>Последняя опубликованная статья</h2>
+        {% if article %}
+            <div class="article-preview">
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.content|truncatewords:40 }}</p>
+                <time datetime="{{ article.created_at|date:'Y-m-d' }}">{{ article.created_at|date:"d.m.Y" }}</time>
+            </div>
+        {% else %}
+            <p>Нет опубликованных статей.</p>
+        {% endif %}
+    </section>
+
+    <section id="partners" aria-label="Компании-партнёры">
+        <h2>Партнёры</h2>
+        <ul class="partners-list">
+            {% for partner in partners %}
+            <li>
+                <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer" title="Сайт {{ partner.name }}">
+                    <span class="partner-circle">
+                        {% if partner.logo %}
+                        <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" width="80" height="80" loading="lazy">
+                        {% else %}
+                        <span>{{ partner.name|slice:":1" }}</span>
+                        {% endif %}
+                    </span>
+                </a>
+                <span class="partner-name">{{ partner.name }}</span>
+            </li>
+            {% empty %}
+            <li>Список партнёров появится после загрузки демо-данных.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id="museum-verse" aria-label="Стихотворение о музее">
+        <h2>Стихотворный эпиграф</h2>
+        <blockquote cite="{% url 'pages:home' %}#museum-verse" lang="ru">
+            <p>
+                В залах тишина хранит века,<br>
+                холсты дыханием света живы;<wbr>
+                шаги едва касаются паркета,<br>
+                и время замирает у витрины.
+            </p>
+            <footer>— <cite>Эпиграф главной страницы, Музей искусств</cite></footer>
+        </blockquote>
+        <p>
+            Температура в залах поддерживается на уровне 20&nbsp;<sup>±1</sup>&nbsp;°C;
+            влажность — 50&nbsp;<sub>%</sub>.
+            Как сказано в уставе: <q lang="ru">Искусство принадлежит каждому, кто ищет красоту</q>.
+            Старая версия билета <del>без QR-кода</del> заменена на <ins>электронный формат</ins>.
+        </p>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/slider.js' %}"></script>
+<script src="{% static 'js/card-3d.js' %}"></script>
+<script>
+(function () {
+    var started = Date.now();
+    var minShow = 900;
+
+    function hidePreloader() {
+        var delay = Math.max(0, minShow - (Date.now() - started));
+        setTimeout(function () {
+            document.body.classList.add('is-loaded');
+            var loader = document.getElementById('page-preloader');
+            if (loader) {
+                loader.setAttribute('aria-hidden', 'true');
+            }
+        }, delay);
+    }
+
+    if (document.readyState === 'complete') {
+        hidePreloader();
+    } else {
+        window.addEventListener('load', hidePreloader);
+    }
+})();
+
+document.addEventListener('DOMContentLoaded', function () {
+    var slides = [
+        { src: '{% static "images/banners/banner1.png" %}', alt: 'Выставка месяца', caption: 'Выставка месяца', link: '{% url "pages:news_list" %}' },
+        { src: '{% static "images/banners/banner2.png" %}', alt: 'Экскурсии', caption: 'Экскурсии', link: '{% url "museum:tour_list" %}' },
+        { src: '{% static "images/banners/banner3.png" %}', alt: 'Семейный билет', caption: 'Семейный билет', link: '{% url "museum:ticket_prices" %}' }
+    ];
+
+    var slider = new ImageSlider('#main-slider', {
+        slides: slides,
+        loop: true,
+        navs: true,
+        pags: true,
+        auto: true,
+        delay: 5,
+        stopMouseHover: true
+    });
+
+    var admin = document.getElementById('slider-admin');
+    if (admin && slider) {
+        document.getElementById('slider-loop').addEventListener('change', function (e) { slider.setLoop(e.target.checked); });
+        document.getElementById('slider-navs').addEventListener('change', function (e) { slider.setNavs(e.target.checked); });
+        document.getElementById('slider-pags').addEventListener('change', function (e) { slider.setPags(e.target.checked); });
+        document.getElementById('slider-auto').addEventListener('change', function (e) { slider.setAuto(e.target.checked); });
+        document.getElementById('slider-hover').addEventListener('change', function (e) { slider.setStopMouseHover(e.target.checked); });
+        var delayInput = document.getElementById('slider-delay');
+        function applyDelay() {
+            slider.setDelay(parseFloat(delayInput.value));
+        }
+        delayInput.addEventListener('input', applyDelay);
+        delayInput.addEventListener('change', applyDelay);
+    }
+});
+</script>
 {% endblock %}
