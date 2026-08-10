@@ -3,6 +3,7 @@
 личные данные для сотрудника/посетителя. CRUD, поиск, сортировка.
 """
 import logging
+import json
 from datetime import timedelta
 from decimal import Decimal
 
@@ -13,8 +14,9 @@ from django.db.models import Count, Q, Sum, Avg
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.http import JsonResponse, HttpResponseForbidden
-from django.views.decorators.http import require_http_methods, require_GET
+from django.views.decorators.http import require_http_methods, require_GET, require_POST
 
+from . import cart as cart_module
 from .models import (
     Exhibit,
     Hall,
@@ -229,9 +231,159 @@ def visitor_tickets(request):
 
 
 def ticket_prices(request):
-    """Стоимость посещения: тарифы по дням недели, возрасту, доп. услугам."""
-    prices = TicketPrice.objects.all().order_by('name')
-    return render(request, 'museum/ticket_prices.html', {'prices': prices})
+    """Каталог услуг / тарифов посещения (группы для rowspan в таблице)."""
+    prices = list(TicketPrice.objects.all().order_by('name'))
+    from django.urls import reverse
+
+    services_json = json.dumps([
+        {
+            'id': p.pk,
+            'name': p.name,
+            'price': str(p.base_price),
+            'description': p.description or '',
+            'image': p.image.url if p.image else '',
+            'url': reverse('museum:service_detail', args=[p.pk]),
+        }
+        for p in prices
+    ], ensure_ascii=False)
+
+    def category(price):
+        if price.is_extra_service:
+            return 'Дополнительные услуги'
+        if price.is_child and not price.is_adult:
+            return 'Детские билеты'
+        if price.is_adult:
+            return 'Взрослые билеты'
+        return 'Прочее'
+
+    category_order = {
+        'Взрослые билеты': 0,
+        'Детские билеты': 1,
+        'Дополнительные услуги': 2,
+        'Прочее': 3,
+    }
+    prices.sort(key=lambda p: (category_order.get(category(p), 99), p.name))
+
+    price_groups = []
+    for cat_name in ('Взрослые билеты', 'Детские билеты', 'Дополнительные услуги', 'Прочее'):
+        items = [p for p in prices if category(p) == cat_name]
+        if items:
+            price_groups.append({
+                'category': cat_name,
+                'items': items,
+                'rowspan': len(items),
+            })
+
+    return render(request, 'museum/ticket_prices.html', {
+        'prices': prices,
+        'price_groups': price_groups,
+        'services_json': services_json,
+    })
+
+
+def service_detail(request, pk):
+    """Страница услуги/товара с кнопкой «Добавить в корзину»."""
+    service = get_object_or_404(TicketPrice, pk=pk)
+    return render(request, 'museum/service_detail.html', {'service': service})
+
+
+@require_POST
+def cart_add(request, pk):
+    """Добавить услугу в корзину."""
+    service = get_object_or_404(TicketPrice, pk=pk)
+    qty = request.POST.get('quantity', 1)
+    try:
+        qty = max(1, int(qty))
+    except (TypeError, ValueError):
+        qty = 1
+    cart_module.add_to_cart(request.session, service.pk, qty)
+    messages.success(request, f'«{service.name}» добавлено в корзину.')
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('museum:cart')
+
+
+def cart_view(request):
+    """Корзина заказа: список, изменить количество, удалить, оплатить."""
+    items, total = cart_module.cart_items(request.session)
+    return render(request, 'museum/cart.html', {'items': items, 'total': total})
+
+
+@require_POST
+def cart_update(request, pk):
+    """Увеличить / уменьшить количество в корзине."""
+    action = request.POST.get('action', '')
+    qty_raw = request.POST.get('quantity')
+    cart = cart_module.get_cart(request.session)
+    current = int(cart.get(str(pk), 0))
+    if action == 'increase':
+        cart_module.set_quantity(request.session, pk, current + 1)
+    elif action == 'decrease':
+        cart_module.set_quantity(request.session, pk, current - 1)
+    elif qty_raw is not None:
+        try:
+            cart_module.set_quantity(request.session, pk, int(qty_raw))
+        except (TypeError, ValueError):
+            pass
+    return redirect('museum:cart')
+
+
+@require_POST
+def cart_remove(request, pk):
+    """Удалить позицию из корзины."""
+    cart_module.remove_from_cart(request.session, pk)
+    messages.info(request, 'Позиция удалена из корзины.')
+    return redirect('museum:cart')
+
+
+def checkout(request):
+    """Страница оплаты товаров из корзины."""
+    items, total = cart_module.cart_items(request.session)
+    if not items:
+        messages.warning(request, 'Корзина пуста.')
+        return redirect('museum:cart')
+
+    if request.method == 'POST':
+        promo = (request.POST.get('promo_code') or '').strip()
+        discount = Decimal('0')
+        if promo:
+            from pages.models import PromoCode
+            promo_obj = PromoCode.objects.filter(code__iexact=promo, is_active=True).first()
+            if promo_obj:
+                if promo_obj.discount_percent:
+                    discount = (total * promo_obj.discount_percent / Decimal('100')).quantize(Decimal('0.01'))
+                elif promo_obj.discount_amount:
+                    discount = promo_obj.discount_amount
+            else:
+                messages.error(request, 'Промокод не найден или не действует.')
+                return render(request, 'museum/checkout.html', {
+                    'items': items,
+                    'total': total,
+                    'promo_code': promo,
+                })
+
+        final_total = max(Decimal('0.00'), total - discount)
+        if request.user.is_authenticated and not is_employee(request.user):
+            TicketPurchase.objects.create(
+                user=request.user,
+                tour=None,
+                price=final_total,
+                promo_code=promo,
+            )
+        cart_module.clear_cart(request.session)
+        messages.success(
+            request,
+            f'Оплата на сумму {final_total} BYN принята. Спасибо за заказ!',
+        )
+        logger.info('Checkout completed, total=%s, user=%s', final_total, request.user)
+        return redirect('pages:home')
+
+    return render(request, 'museum/checkout.html', {
+        'items': items,
+        'total': total,
+        'promo_code': '',
+    })
 
 
 # --- CRUD для экспонатов (админ или через админку; для примера — только чтение для всех, создание/редактирование через админку) ---
@@ -331,6 +483,7 @@ def statistics_view(request):
 
     chart_labels = [x['art_type__name'] or 'Без типа' for x in exhibits_by_art_type]
     chart_data = [x['cnt'] for x in exhibits_by_art_type]
+    max_art_count = max(chart_data) if chart_data else 1
     return render(request, 'museum/statistics.html', {
         'exhibits_alpha': exhibits_alpha,
         'visitors': visitors[:50],
@@ -349,6 +502,7 @@ def statistics_view(request):
         'tour_count': len(tour_sizes),
         'chart_labels': chart_labels,
         'chart_data': chart_data,
+        'max_art_count': max_art_count,
     })
 
 
