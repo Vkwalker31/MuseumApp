@@ -10,10 +10,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 
+from museum.models import TicketPrice
 from .models import (
     Article,
+    Partner,
     CompanyInfo,
+    CompanyProfile,
+    CompanyHistory,
     News,
     FAQ,
     Contact,
@@ -26,15 +32,37 @@ logger = logging.getLogger('pages')
 
 
 def home(request):
-    """Главная: краткая информация о последней опубликованной статье."""
+    """
+    Главная: логотип, баннеры, каталог услуг, последняя статья, партнёры.
+    """
     article = Article.objects.filter(is_published=True).order_by('-created_at').first()
-    return render(request, 'pages/home.html', {'article': article})
+    services = TicketPrice.objects.all().order_by('name')[:8]
+    partners = Partner.objects.filter(is_active=True).order_by('order', 'name')
+    profile = CompanyProfile.objects.first()
+    banners = [
+        {'src': 'images/banners/banner1.png', 'alt': 'Выставка месяца в музее', 'title': 'Выставка месяца'},
+        {'src': 'images/banners/banner2.png', 'alt': 'Экскурсии для всех возрастов', 'title': 'Экскурсии'},
+        {'src': 'images/banners/banner3.png', 'alt': 'Семейный билет со скидкой', 'title': 'Семейный билет'},
+    ]
+    return render(request, 'pages/home.html', {
+        'article': article,
+        'services': services,
+        'partners': partners,
+        'profile': profile,
+        'banners': banners,
+    })
 
 
 def about(request):
-    """О компании."""
+    """О компании: блоки, профиль, история, видео, реквизиты, сертификат."""
     blocks = CompanyInfo.objects.all().order_by('order')
-    return render(request, 'pages/about.html', {'blocks': blocks})
+    profile = CompanyProfile.objects.first()
+    history = CompanyHistory.objects.all().order_by('year', 'order')
+    return render(request, 'pages/about.html', {
+        'blocks': blocks,
+        'profile': profile,
+        'history': history,
+    })
 
 
 def news_list(request):
@@ -65,12 +93,55 @@ def faq_list(request):
 
 def contacts(request):
     """Контакты: фото сотрудников, описание, телефоны, почта."""
-    contacts_list = Contact.objects.all().order_by('order')
-    return render(request, 'pages/contacts.html', {'contacts_list': contacts_list})
+    contacts_list = []
+    seen_names = set()
+    for contact in Contact.objects.all().order_by('order', 'pk'):
+        key = contact.name.strip().lower()
+        if key in seen_names:
+            continue
+        seen_names.add(key)
+        contacts_list.append(contact)
+    profile = CompanyProfile.objects.first()
+    return render(request, 'pages/contacts.html', {
+        'contacts_list': contacts_list,
+        'profile': profile,
+    })
+
+
+def contacts_table(request):
+    """Интерактивная таблица контактов (ЛР3)."""
+    return render(request, 'pages/contacts_table.html')
+
+
+@require_GET
+def api_contacts(request):
+    """JSON API для загрузки контактов в таблицу (ЛР3)."""
+    seen_names = set()
+    items = []
+    for contact in Contact.objects.all().order_by('order', 'pk'):
+        key = contact.name.strip().lower()
+        if key in seen_names:
+            continue
+        seen_names.add(key)
+        items.append({
+            'id': contact.pk,
+            'name': contact.name,
+            'role': contact.role,
+            'photo': contact.photo.url if contact.photo else '',
+            'phone': contact.phone,
+            'email': contact.email,
+            'description': contact.description,
+        })
+    return JsonResponse({'contacts': items})
+
+
+def js_lab(request):
+    """Страница «Задания JS» — задания по изучению возможностей JS (ЛР3)."""
+    return render(request, 'pages/js_lab.html')
 
 
 def privacy(request):
-    """Политика конфиденциальности — пустая страница."""
+    """Политика конфиденциальности музея."""
     return render(request, 'pages/privacy.html')
 
 
@@ -138,9 +209,10 @@ def register(request):
         return redirect('pages:home')
     return render(request, 'pages/register.html', {'form': form})
 
+
 @login_required
 def profile(request):
-    """Личный кабинет: для посетителя — покупки и промокоды; для сотрудника — ссылки на экспонаты и экскурсии."""
+    """Личный кабинет: для посетителя — покупки; для сотрудника — экспонаты."""
     from museum.utils import is_employee
     if is_employee(request.user):
         return redirect('museum:employee_my_exhibits')
