@@ -1,0 +1,258 @@
+/* Каталог тарифов */
+
+article > h1 {
+    margin-bottom: var(--space-md);
+}
+
+article > h1 + p {
+    text-indent: 0;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+    background: rgba(44, 62, 107, 0.05);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--color-primary);
+}
+
+article > h1 + p a {
+    font-weight: 600;
+}
+
+/* Main tariffs table */
+.tariffs-table,
+article > table {
+    width: 100%;
+    border-collapse: collapse;
+    caption-side: top;
+    empty-cells: show;
+    margin: var(--space-lg) 0 var(--space-xl);
+    font-size: 0.875rem;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+article > table caption {
+    caption-side: top;
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(90deg, var(--color-primary) 0%, #3d5288 50%, var(--color-primary) 100%);
+    color: #fff;
+    letter-spacing: 0.03em;
+}
+
+article > table thead th {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 0.7em 0.6em;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    border: 1px solid #1a2847;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+article > table thead th#th-price,
+article > table thead th#th-day {
+    background: #1a2847;
+}
+
+article > table tbody th[scope="rowgroup"] {
+    background: rgba(201, 162, 39, 0.18);
+    color: var(--color-primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75em 0.5em;
+    border: 1px solid var(--color-border);
+    writing-mode: horizontal-tb;
+    min-width: 100px;
+}
+
+article > table tbody th[scope="row"] {
+    background: rgba(44, 62, 107, 0.06);
+    text-align: left;
+    padding: 0.6em 0.75em;
+    border: 1px solid var(--color-border);
+    font-weight: 600;
+}
+
+article > table tbody th[scope="row"] a {
+    text-decoration: none;
+    color: var(--color-primary);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+article > table tbody th[scope="row"] a:hover {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+article > table tbody td {
+    padding: 0.55em 0.65em;
+    border: 1px solid var(--color-border);
+    text-align: center;
+    vertical-align: middle;
+}
+
+article > table tbody tr:nth-child(odd) td,
+article > table tbody tr:nth-child(odd) th[scope="row"] {
+    background: #fff;
+}
+
+article > table tbody tr:nth-child(even) td,
+article > table tbody tr:nth-child(even) th[scope="row"] {
+    background: rgba(44, 62, 107, 0.03);
+}
+
+article > table tbody tr:hover td,
+article > table tbody tr:hover th[scope="row"] {
+    background: rgba(201, 162, 39, 0.12);
+}
+
+article > table tbody tr:first-child td,
+article > table tbody tr:first-child th {
+    border-top: 2px solid var(--color-accent);
+}
+
+article > table tbody tr:last-child td,
+article > table tbody tr:last-child th {
+    border-bottom: 2px solid var(--color-primary);
+}
+
+article > table tbody tr:nth-child(4n) td:nth-child(2) {
+    font-weight: 700;
+    color: var(--color-accent);
+    font-size: 1.05em;
+}
+
+/* Price column */
+article > table tbody td:nth-child(2) {
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Yes/no columns */
+article > table tbody td:nth-child(4),
+article > table tbody td:nth-child(5),
+article > table tbody td:nth-child(6) {
+    font-size: 0.8125rem;
+    text-transform: lowercase;
+}
+
+article > table tbody td:nth-child(4):not(:empty),
+article > table tbody td:nth-child(5):not(:empty) {
+    font-weight: 600;
+}
+
+/* Action column */
+article > table tbody td:last-child a {
+    display: inline-block;
+    padding: 0.25em 0.65em;
+    background: var(--color-primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+article > table tbody td:last-child a:link,
+article > table tbody td:last-child a:visited {
+    color: #fff;
+}
+
+article > table tbody td:last-child a:hover {
+    background: var(--color-accent);
+    color: var(--color-text);
+}
+
+/* Footer totals */
+article > table tfoot th,
+article > table tfoot td {
+    padding: 0.75em 1em;
+    background: linear-gradient(180deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.25) 100%);
+    border: 1px solid var(--color-border);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+}
+
+article > table tfoot td {
+    font-size: 1.1rem;
+    color: var(--color-accent);
+}
+
+/* Empty state */
+article > table tbody tr td[colspan] {
+    text-align: center;
+    padding: var(--space-xl);
+    font-style: italic;
+    color: var(--color-muted);
+}
+
+/* Cart link */
+article > p:last-of-type {
+    text-indent: 0;
+    margin-top: var(--space-lg);
+}
+
+article > p:last-of-type a {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-accent);
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-family: var(--font-display);
+    transition: background 0.2s, transform 0.1s;
+}
+
+article > p:last-of-type a:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+article > p:last-of-type a:active {
+    transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 960px) {
+    article > table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.75rem;
+    }
+
+    article > table thead th,
+    article > table tbody td,
+    article > table tbody th {
+        padding: 0.45em 0.4em;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    article > table caption {
+        font-size: 1rem;
+        padding: var(--space-sm);
+    }
+}
+
+@media screen and (min-width: 1280px) {
+    article > table {
+        font-size: 0.9375rem;
+    }
+}

@@ -1,0 +1,174 @@
+/* Промокоды */
+
+article > h1 {
+    margin-bottom: var(--space-xl);
+}
+
+article > section {
+    margin-bottom: var(--space-xl);
+}
+
+article > section h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--color-accent);
+}
+
+/* Active promos table */
+.promo-table,
+article > section:first-of-type table {
+    width: 100%;
+    border-collapse: collapse;
+    caption-side: top;
+    empty-cells: show;
+    font-size: 0.9375rem;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.promo-table caption,
+article > section:first-of-type caption {
+    caption-side: top;
+    padding: var(--space-md);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    background: var(--color-primary);
+    color: #fff;
+}
+
+article > section:first-of-type thead th {
+    background: linear-gradient(180deg, var(--color-primary) 0%, #1a2847 100%);
+    color: #fff;
+    padding: 0.75em 1em;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #1a2847;
+    white-space: nowrap;
+}
+
+article > section:first-of-type tbody th[scope="row"] {
+    background: rgba(201, 162, 39, 0.12);
+    font-family: 'Consolas', monospace;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: left;
+    padding: 0.65em 1em;
+    border: 1px solid var(--color-border);
+}
+
+article > section:first-of-type tbody td {
+    padding: 0.65em 1em;
+    border: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+article > section:first-of-type tbody tr:nth-child(odd) {
+    background: #fff;
+}
+
+article > section:first-of-type tbody tr:nth-child(even) {
+    background: rgba(44, 62, 107, 0.04);
+}
+
+article > section:first-of-type tbody tr:hover {
+    background: rgba(201, 162, 39, 0.1);
+}
+
+article > section:first-of-type tbody tr:first-child td,
+article > section:first-of-type tbody tr:first-child th {
+    border-top: 2px solid var(--color-accent);
+}
+
+article > section:first-of-type tbody tr:last-child td,
+article > section:first-of-type tbody tr:last-child th {
+    border-bottom: 2px solid var(--color-primary);
+}
+
+article > section:first-of-type tbody tr:nth-child(3n) td:last-child {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+article > section:first-of-type tbody code {
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    background: rgba(44, 62, 107, 0.08);
+    border-radius: 3px;
+    font-size: 0.95em;
+    letter-spacing: 0.05em;
+}
+
+article > section:first-of-type tbody td:nth-child(3) {
+    font-weight: 700;
+    color: var(--color-accent);
+    text-align: center;
+}
+
+article > section:first-of-type tbody time {
+    font-variant: small-caps;
+    color: var(--color-muted);
+}
+
+/* Empty row */
+article > section:first-of-type tbody tr td[colspan] {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-muted);
+    padding: var(--space-xl);
+}
+
+/* Archive list */
+.promo-archive-list,
+article > section:last-of-type ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+article > section:last-of-type ul li {
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-sm);
+    background: rgba(44, 62, 107, 0.04);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--color-muted);
+    color: var(--color-muted);
+}
+
+article > section:last-of-type ul li del {
+    color: #999;
+}
+
+article > section:last-of-type ul li code {
+    font-family: 'Consolas', monospace;
+    font-size: 0.9em;
+}
+
+article > section:last-of-type ul li:first-child {
+    border-left-color: var(--color-border);
+}
+
+article > section:last-of-type ul li:last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 768px) {
+    article > section:first-of-type table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    article > section:first-of-type thead th,
+    article > section:first-of-type tbody td,
+    article > section:first-of-type tbody th {
+        padding: 0.5em 0.65em;
+        font-size: 0.8125rem;
+    }
+}

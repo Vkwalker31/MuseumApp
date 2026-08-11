@@ -1,0 +1,221 @@
+/* Политика конфиденциальности */
+
+article {
+    max-width: 820px;
+    margin: 0 auto;
+    line-height: 1.75;
+}
+
+article > header {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 3px double var(--color-primary);
+}
+
+article > header h1 {
+    font-size: 1.85rem;
+    margin-bottom: var(--space-sm);
+    text-transform: none;
+    letter-spacing: 0.01em;
+}
+
+article > header p {
+    text-indent: 0;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+}
+
+article > header time {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* Table of contents */
+article > nav[aria-label="Содержание политики"] {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: rgba(44, 62, 107, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+article > nav[aria-label="Содержание политики"] ol {
+    margin: 0;
+    padding-left: 1.5em;
+    counter-reset: privacy-toc;
+}
+
+article > nav[aria-label="Содержание политики"] ol li {
+    margin-bottom: var(--space-xs);
+    padding: var(--space-xs) 0;
+}
+
+article > nav[aria-label="Содержание политики"] ol li::marker {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+article > nav[aria-label="Содержание политики"] a {
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px dotted var(--color-border);
+    transition: border-color 0.2s, color 0.2s;
+}
+
+article > nav[aria-label="Содержание политики"] a:hover {
+    border-bottom-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+/* Sections */
+article > section {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    scroll-margin-top: calc(var(--header-height) + var(--space-md));
+}
+
+article > section:not(:last-of-type) {
+    border-bottom: 1px solid var(--color-border);
+}
+
+article > section h2 {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-md);
+    border-left: 4px solid var(--color-accent);
+}
+
+article > section p {
+    text-indent: 2em;
+    text-align: justify;
+    hyphens: auto;
+    margin-bottom: var(--space-md);
+}
+
+article > section ul {
+    margin: var(--space-md) 0 var(--space-lg);
+    padding-left: 2em;
+}
+
+article > section ul li {
+    margin-bottom: var(--space-sm);
+    line-height: 1.65;
+}
+
+article > section ul li::marker {
+    color: var(--color-accent);
+}
+
+article > section blockquote {
+    margin: var(--space-lg) var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(201, 162, 39, 0.08);
+    border-left: 4px solid var(--color-accent);
+    font-style: italic;
+}
+
+article > section blockquote p {
+    text-indent: 0;
+    margin-bottom: var(--space-sm);
+}
+
+article > section blockquote footer {
+    text-align: right;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+}
+
+article > section blockquote cite {
+    font-style: normal;
+}
+
+article > section address {
+    padding: var(--space-lg);
+    background: rgba(44, 62, 107, 0.06);
+    border-radius: var(--radius);
+    line-height: 1.8;
+    font-style: normal;
+}
+
+article > section address a {
+    font-weight: 600;
+}
+
+article > section abbr[title] {
+    cursor: help;
+    border-bottom: 1px dotted var(--color-accent);
+}
+
+/* Back to top link */
+article > p:last-child {
+    text-indent: 0;
+    text-align: center;
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px dashed var(--color-border);
+}
+
+article > p:last-child a {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+article > p:last-child a:link,
+article > p:last-child a:visited {
+    color: #fff;
+}
+
+article > p:last-child a:hover {
+    background: var(--color-accent);
+    color: var(--color-text);
+}
+
+/* Section anchors highlight on target */
+article > section:target {
+    background: rgba(201, 162, 39, 0.06);
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+}
+
+article > section:target h2 {
+    color: var(--color-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive & print
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 640px) {
+    article > section p {
+        text-indent: 1.25em;
+    }
+
+    article > nav[aria-label="Содержание политики"] {
+        padding: var(--space-md);
+    }
+}
+
+@media print {
+    article > nav[aria-label="Содержание политики"],
+    article > p:last-child {
+        display: none;
+    }
+
+    article > section {
+        break-inside: avoid;
+    }
+
+    article > section:target {
+        background: transparent;
+    }
+}
