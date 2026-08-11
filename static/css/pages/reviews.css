@@ -1,0 +1,202 @@
+/* Отзывы */
+
+.form-demo {
+    margin: var(--space-xl) 0;
+    padding: var(--space-lg);
+    border: 2px dashed var(--color-accent);
+    border-radius: var(--radius);
+    background: rgba(201, 162, 39, 0.06);
+}
+
+.form-demo legend {
+    font-family: caption, var(--font-main);
+    font-weight: 700;
+    color: var(--color-primary);
+    padding: 0 var(--space-sm);
+}
+
+.form-demo .demo-row {
+    text-indent: 0;
+    margin-bottom: var(--space-sm);
+}
+
+.form-demo .disabled-demo {
+    opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Font keyword families for review form elements
+   -------------------------------------------------------------------------- */
+#review-form label,
+article form label {
+    font-family: caption, var(--font-main);
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+#review-form input,
+#review-form textarea,
+#review-form select,
+article form input[type="search"],
+article form select {
+    font-family: input, var(--font-main);
+    font-size: 1rem;
+}
+
+#review-form select,
+article form select {
+    font-family: menu, var(--font-main);
+}
+
+#review-form textarea,
+article form textarea {
+    font-family: message-box, var(--font-main);
+    min-height: 120px;
+    resize: vertical;
+    width: 100%;
+    max-width: 640px;
+}
+
+article > p:first-of-type {
+    text-indent: 0;
+}
+
+/* Status bar style for filter form */
+.reviews-filter-form,
+article > form.reviews-filter-form,
+article > form[method="get"] {
+    font-family: status-bar, var(--font-main);
+    font-size: 0.875rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: linear-gradient(180deg, #eceef2 0%, #f8f6f2 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+article > form[method="get"] p,
+article > form[method="get"] label {
+    margin: 0;
+    text-indent: 0;
+}
+
+article > form[method="get"] input,
+article > form[method="get"] select {
+    font-family: input, var(--font-main);
+}
+
+article > form[method="get"] button {
+    font-family: status-bar, var(--font-main);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   Review list
+   -------------------------------------------------------------------------- */
+.reviews-list,
+article > ul {
+    list-style: none;
+    padding: 0;
+}
+
+article > ul > li {
+    margin-bottom: var(--space-lg);
+    padding: var(--space-lg);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    box-shadow: var(--shadow);
+}
+
+article > ul > li article h2 {
+    font-size: 1.1rem;
+    margin-bottom: var(--space-xs);
+    color: var(--color-primary);
+}
+
+article > ul > li article > p time {
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    font-family: status-bar, var(--font-main);
+}
+
+article > ul > li blockquote {
+    margin: var(--space-md) 0 0;
+    padding: var(--space-md);
+    background: rgba(44, 62, 107, 0.04);
+    border-left: 3px solid var(--color-primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+article > ul > li blockquote p {
+    text-indent: 0;
+    margin: 0;
+    font-style: italic;
+    font-family: message-box, var(--font-main);
+    line-height: 1.65;
+}
+
+/* Rating highlight in heading */
+article > ul > li article h2 {
+    font-family: caption, var(--font-display);
+}
+
+/* Pagination */
+article > p:last-of-type {
+    text-indent: 0;
+    font-family: status-bar, var(--font-main);
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    text-align: center;
+    padding: var(--space-md);
+}
+
+/* Review form page */
+#review-form {
+    max-width: 560px;
+    padding: var(--space-lg);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+#review-form p {
+    text-indent: 0;
+    margin-bottom: var(--space-md);
+}
+
+#review-form span {
+    display: block;
+    color: #922;
+    font-family: status-bar, var(--font-main);
+    font-size: 0.8125rem;
+    margin-top: var(--space-xs);
+}
+
+#review-form button[type="submit"] {
+    font-family: caption, var(--font-main);
+    font-weight: 700;
+    padding: 0.6em 1.5em;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 640px) {
+    article > form[method="get"] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    article > form[method="get"] label {
+        display: block;
+        margin-bottom: var(--space-xs);
+    }
+}

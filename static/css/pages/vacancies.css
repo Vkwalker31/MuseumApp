@@ -1,0 +1,117 @@
+/* Вакансии */
+
+article > h1 + p {
+    text-indent: 0;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.vacancy-card,
+article > section[id^="vacancy-"] {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.vacancy-card::after,
+article > section[id^="vacancy-"]::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.vacancy-card h2,
+article > section[id^="vacancy-"] h2 {
+    float: left;
+    width: 65%;
+    margin-bottom: var(--space-sm);
+    padding-right: var(--space-md);
+    color: var(--color-primary);
+}
+
+.vacancy-card > p,
+article > section[id^="vacancy-"] > p {
+    float: right;
+    width: 30%;
+    text-align: right;
+    text-indent: 0;
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(201, 162, 39, 0.12);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    color: var(--color-muted);
+}
+
+.vacancy-card > p time,
+article > section[id^="vacancy-"] > p time {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.vacancy-card > div,
+article > section[id^="vacancy-"] > div {
+    clear: both;
+    padding-top: var(--space-md);
+    border-top: 1px dashed var(--color-border);
+    line-height: 1.75;
+}
+
+.vacancy-card > div p,
+article > section[id^="vacancy-"] > div p {
+    text-indent: 1.5em;
+    margin-bottom: var(--space-sm);
+}
+
+.vacancies-list .vacancy-card:first-of-type,
+article > section[id^="vacancy-"]:first-of-type {
+    border-top: 4px solid var(--color-accent);
+}
+
+.vacancies-list .vacancy-card:nth-child(even),
+article > section[id^="vacancy-"]:nth-child(even) {
+    background: linear-gradient(
+        135deg,
+        #fff 0%,
+        rgba(44, 62, 107, 0.03) 100%
+    );
+}
+
+.vacancies-list .vacancy-card:nth-child(odd) h2,
+article > section[id^="vacancy-"]:nth-child(odd) h2 {
+    border-left: 4px solid var(--color-primary);
+    padding-left: var(--space-md);
+}
+
+/* Empty state */
+article > p:only-of-type {
+    text-indent: 0;
+    padding: var(--space-xl);
+    text-align: center;
+    color: var(--color-muted);
+    font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — clear floats on narrow screens
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 640px) {
+    .vacancy-card h2,
+    article > section[id^="vacancy-"] h2,
+    .vacancy-card > p,
+    article > section[id^="vacancy-"] > p {
+        float: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .vacancy-card > p,
+    article > section[id^="vacancy-"] > p {
+        margin-bottom: var(--space-md);
+    }
+}
