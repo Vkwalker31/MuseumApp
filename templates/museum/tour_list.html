@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Экскурсии{% endblock %}
 {% block content %}
+<article>
 <h1>Проведённые экскурсии</h1>
 <form method="get">
   <input type="text" name="q" value="{{ search }}" placeholder="Поиск по коду или названию">
@@ -18,14 +19,45 @@
   </select>
   <button type="submit">Применить</button>
 </form>
-<ul>
-  {% for t in page_obj %}
-    <li>{{ t.code }} — {{ t.name }}, {{ t.date|date:"d/m/Y H:i" }}, группа {{ t.group_size }} чел., проводник: {{ t.conductor|default:"—" }}, сезон: {{ t.get_season_display|default:"—" }}</li>
-  {% empty %}
-    <li>Экскурсий нет.</li>
-  {% endfor %}
-</ul>
-{% if page_obj.has_other_pages %}
-  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
-{% endif %}
+
+<section aria-label="Расписание экскурсий">
+  <table>
+    <caption>Проведённые экскурсии музея</caption>
+    <thead>
+      <tr>
+        <th scope="col">Код</th>
+        <th scope="col">Название</th>
+        <th scope="col">Дата</th>
+        <th scope="col">Длительность</th>
+        <th scope="col">Аудитория</th>
+        <th scope="col">Стоимость</th>
+        <th scope="col">Группа</th>
+        <th scope="col">Проводник</th>
+        <th scope="col">Сезон</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in page_obj %}
+      <tr>
+        <th scope="row">{{ t.code }}</th>
+        <td>{{ t.name }}</td>
+        <td><time datetime="{{ t.date|date:'c' }}">{{ t.date|date:"d/m/Y H:i" }}</time></td>
+        <td>{{ t.duration_minutes }} мин.</td>
+        <td>{{ t.audience|default:"—" }}</td>
+        <td>{{ t.price }} BYN</td>
+        <td>{{ t.group_size }} чел.</td>
+        <td>{{ t.conductor|default:"—" }}</td>
+        <td>{{ t.get_season_display|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="9">Экскурсий нет.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% include 'includes/pagination.html' %}
+</article>
 {% endblock %}

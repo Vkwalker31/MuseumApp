@@ -1,71 +1,215 @@
 {% extends 'base.html' %}
 {% block title %}Статистика{% endblock %}
 {% block content %}
+<article>
 <h1>Статистические показатели</h1>
-<p>Таймзона: <strong>{{ user_timezone }}</strong></p>
-<p>Текущая дата ({{ user_timezone }}): <strong>{{ now_local_str }}</strong> | UTC: <strong>{{ now_utc_str }}</strong></p>
-<pre>{{ text_calendar }}</pre>
 
-<h2>Экспонаты по видам искусства (диаграмма)</h2>
-{% if chart_data %}
-  <div style="max-width: 400px;">
-    {% for item in exhibits_by_art_type %}
-      <div style="margin: 4px 0;">
-        <span style="display: inline-block; width: 120px;">{{ item.art_type__name|default:"Без типа" }}</span>
-        <span style="display: inline-block; background: #4a90d9; height: 20px; width: {{ item.cnt }}0px; min-width: 20px;"></span>
-        {{ item.cnt }}
-      </div>
-    {% endfor %}
-  </div>
-{% else %}
+<section aria-label="Дата и календарь">
+  <table>
+    <caption>Текущие дата и время</caption>
+    <thead>
+      <tr>
+        <th scope="col">Параметр</th>
+        <th scope="col">Значение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Таймзона</th>
+        <td>{{ user_timezone }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Локальная дата</th>
+        <td><time datetime="{{ now_local_str }}">{{ now_local_str }}</time></td>
+      </tr>
+      <tr>
+        <th scope="row">UTC</th>
+        <td><time datetime="{{ now_utc_str }}">{{ now_utc_str }}</time></td>
+      </tr>
+    </tbody>
+  </table>
+  <details>
+    <summary>Календарь на текущий месяц</summary>
+    <pre>{{ text_calendar }}</pre>
+  </details>
+</section>
+
+<section aria-labelledby="art-chart">
+  <h2 id="art-chart">Экспонаты по видам искусства</h2>
+  {% if exhibits_by_art_type %}
+  <table>
+    <caption>Распределение экспонатов по видам искусства</caption>
+    <thead>
+      <tr>
+        <th scope="col">Вид искусства</th>
+        <th scope="col">Количество</th>
+        <th scope="col">Доля (%)</th>
+        <th scope="col">Диаграмма</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in exhibits_by_art_type %}
+      <tr>
+        <th scope="row">{{ item.art_type__name|default:"Без типа" }}</th>
+        <td>{{ item.cnt }}</td>
+        <td>
+          <meter min="0" max="{{ max_art_count }}" value="{{ item.cnt }}" title="{{ item.cnt }} из {{ max_art_count }}">
+            {{ item.cnt }}
+          </meter>
+        </td>
+        <td>
+          <progress max="{{ max_art_count }}" value="{{ item.cnt }}">{{ item.cnt }}</progress>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th scope="row">Наиболее популярный вид</th>
+        <td colspan="3">
+          {% if most_popular_art %}
+          {{ most_popular_art.art_type__name|default:"Без типа" }} ({{ most_popular_art.cnt }})
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {% else %}
   <p>Нет данных для диаграммы.</p>
-{% endif %}
+  {% endif %}
+</section>
 
-<h2>Экспонаты в алфавитном порядке</h2>
-<ol>
-  {% for name in exhibits_alpha %}
+<section aria-labelledby="alpha-exhibits">
+  <h2 id="alpha-exhibits">Экспонаты в алфавитном порядке</h2>
+  <ol>
+    {% for name in exhibits_alpha %}
     <li>{{ name }}</li>
-  {% empty %}
+    {% empty %}
     <li>Нет данных.</li>
-  {% endfor %}
-</ol>
+    {% endfor %}
+  </ol>
+</section>
 
-<h2>Экспонаты по видам искусства</h2>
-<ul>
-  {% for item in exhibits_by_art_type %}
-    <li>{{ item.art_type__name|default:"Без типа" }}: {{ item.cnt }}</li>
-  {% empty %}
-    <li>Нет данных.</li>
-  {% endfor %}
-</ul>
-<p>Наиболее популярный вид искусства: <strong>{% if most_popular_art %}{{ most_popular_art.art_type__name|default:"Без типа" }} ({{ most_popular_art.cnt }}){% else %}—{% endif %}</strong></p>
-<p>Вид с наибольшим «вкладом» (по числу экспонатов): <strong>{% if most_profitable_art %}{{ most_profitable_art.art_type__name|default:"Без типа" }}{% else %}—{% endif %}</strong></p>
+<section aria-labelledby="ticket-stats">
+  <h2 id="ticket-stats">Продажи билетов</h2>
+  <table>
+    <caption>Сводка по покупкам билетов</caption>
+    <thead>
+      <tr>
+        <th scope="col">Показатель</th>
+        <th scope="col">Значение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Всего покупок</th>
+        <td>{{ ticket_stats.count|default:0 }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Общая сумма</th>
+        <td>{{ ticket_stats.total_sum|default:0 }} BYN</td>
+      </tr>
+      <tr>
+        <th scope="row">Средняя сумма</th>
+        <td>{{ ticket_stats.avg_price|default:0 }} BYN</td>
+      </tr>
+      <tr>
+        <th scope="row">Медиана суммы</th>
+        <td>{{ median_price|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Мода суммы</th>
+        <td>{{ mode_price|default:"—" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-<h2>Продажи билетов</h2>
-<p>Всего покупок: {{ ticket_stats.count|default:0 }}</p>
-<p>Общая сумма: {{ ticket_stats.total_sum|default:0 }}</p>
-<p>Средняя сумма: {{ ticket_stats.avg_price|default:0 }}</p>
-<p>Медиана суммы: {{ median_price|default:"—" }}</p>
-<p>Мода суммы: {{ mode_price|default:"—" }}</p>
+<section aria-labelledby="visitor-stats">
+  <h2 id="visitor-stats">Посетители (возраст)</h2>
+  <table>
+    <caption>Статистика возраста посетителей</caption>
+    <thead>
+      <tr>
+        <th scope="col">Показатель</th>
+        <th scope="col">Значение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Средний возраст</th>
+        <td>{{ avg_age|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Медиана возраста</th>
+        <td>{{ median_age|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Мода возраста</th>
+        <td>{{ mode_age|default:"—" }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <details>
+    <summary>Список посетителей (до 50 записей)</summary>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">ФИО</th>
+          <th scope="col">Возраст</th>
+          <th scope="col">Телефон</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in visitors %}
+        <tr>
+          <th scope="row">{{ v.full_name }}</th>
+          <td>{{ v.age }} лет</td>
+          <td>{{ v.phone }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">Нет зарегистрированных посетителей с профилем.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+</section>
 
-<h2>Посетители (возраст)</h2>
-<p>Средний возраст: {{ avg_age|default:"—" }}</p>
-<p>Медиана возраста: {{ median_age|default:"—" }}</p>
-<p>Мода возраста: {{ mode_age|default:"—" }}</p>
-<ul>
-  {% for v in visitors %}
-    <li>{{ v.full_name }} — {{ v.age }} лет ({{ v.phone }})</li>
-  {% empty %}
-    <li>Нет зарегистрированных посетителей с профилем.</li>
-  {% endfor %}
-</ul>
-
-<h2>Экскурсии (размер группы)</h2>
-<p>Средний размер группы: {{ avg_group_size|default:"—" }}</p>
-<p>Медиана размера группы: {{ median_group_size|default:"—" }}</p>
-<p>Мода размера группы: {{ mode_group_size|default:"—" }}</p>
+<section aria-labelledby="tour-stats">
+  <h2 id="tour-stats">Экскурсии (размер группы)</h2>
+  <table>
+    <caption>Статистика групп экскурсий</caption>
+    <thead>
+      <tr>
+        <th scope="col">Показатель</th>
+        <th scope="col">Значение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Средний размер группы</th>
+        <td>{{ avg_group_size|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Медиана размера группы</th>
+        <td>{{ median_group_size|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Мода размера группы</th>
+        <td>{{ mode_group_size|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Всего экскурсий в учёте</th>
+        <td>{{ tour_count|default:0 }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
 {% if user.is_superuser %}
-  <p><a href="{% url 'museum:admin_stats' %}">Расширенная статистика (админ)</a></p>
+<p><a href="{% url 'museum:admin_stats' %}">Расширенная статистика (админ)</a></p>
 {% endif %}
+</article>
 {% endblock %}

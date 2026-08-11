@@ -1,21 +1,118 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Экспозиции и выставки{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/exhibitions.css' %}">{% endblock %}
 {% block content %}
+<article>
 <h1>Экспозиции и выставки</h1>
-<h2>Экспозиции</h2>
-<ul>
+
+<section class="exhibition-section" aria-labelledby="permanent-exhibitions">
+  <header>
+    <h2 id="permanent-exhibitions">Постоянные экспозиции</h2>
+    <p>Коллекции, представленные в музее на постоянной основе.</p>
+  </header>
+
   {% for e in exhibitions %}
-    <li>{{ e.name }} — зал {{ e.hall|default:"—" }}, {{ e.start_date|date:"d/m/Y"|default:"" }} — {{ e.end_date|date:"d/m/Y"|default:"" }}</li>
+  <article class="exhibition-card" aria-labelledby="perm-{{ e.pk }}">
+    <header>
+      <h3 id="perm-{{ e.pk }}">{{ e.name }}</h3>
+      <p>Зал: {{ e.hall|default:"—" }}{% if e.start_date %}, открыта с <time datetime="{{ e.start_date|date:'Y-m-d' }}">{{ e.start_date|date:"d/m/Y" }}</time>{% endif %}</p>
+    </header>
+    {% if e.description %}
+    <p>{{ e.description }}</p>
+    {% endif %}
+
+    {% if e.exhibits.exists %}
+    <table>
+      <caption>Экспонаты постоянной экспозиции «{{ e.name }}»</caption>
+      <thead>
+        <tr>
+          <th scope="col">Фото</th>
+          <th scope="col">Название</th>
+          <th scope="col">Датировка</th>
+          <th scope="col">Инв. №</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ex in e.exhibits.all %}
+        <tr>
+          <td>
+            {% if ex.image %}
+            <figure>
+              <a href="{% url 'museum:exhibit_detail' ex.pk %}">
+                <img src="{{ ex.image.url }}" alt="Миниатюра: {{ ex.name }}" width="120" height="90" loading="lazy">
+              </a>
+              <figcaption>{{ ex.art_type|default:"Экспонат" }}</figcaption>
+            </figure>
+            {% else %}
+            <p>—</p>
+            {% endif %}
+          </td>
+          <th scope="row"><a href="{% url 'museum:exhibit_detail' ex.pk %}">{{ ex.name }}</a></th>
+          <td>{{ ex.dating|default:"—" }}</td>
+          <td>{{ ex.inventory_number|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Экспонаты для этого зала пока не привязаны.</p>
+    {% endif %}
+  </article>
   {% empty %}
-    <li>Нет экспозиций.</li>
+  <p>Постоянные экспозиции пока не добавлены.</p>
   {% endfor %}
-</ul>
-<h2>Выставки</h2>
-<ul>
+</section>
+
+<section class="exhibition-section" aria-labelledby="temporary-shows">
+  <header>
+    <h2 id="temporary-shows">Временные выставки</h2>
+    <p>Ограниченные по сроку проекты и специальные экспозиции.</p>
+  </header>
+
   {% for s in shows %}
-    <li>{{ s.name }} — {{ s.start_date|date:"d/m/Y"|default:"" }} — {{ s.end_date|date:"d/m/Y"|default:"" }}</li>
+  <article class="exhibition-card" aria-labelledby="show-{{ s.pk }}">
+    <header>
+      <h3 id="show-{{ s.pk }}">{{ s.name }}</h3>
+      <p>Период: <time datetime="{{ s.start_date|date:'Y-m-d' }}">{{ s.start_date|date:"d/m/Y"|default:"—" }}</time> — <time datetime="{{ s.end_date|date:'Y-m-d' }}">{{ s.end_date|date:"d/m/Y"|default:"—" }}</time></p>
+    </header>
+    {% if s.description %}<p>{{ s.description }}</p>{% endif %}
+
+    {% if s.exhibits.exists %}
+    <table>
+      <caption>Экспонаты временной выставки «{{ s.name }}»</caption>
+      <thead>
+        <tr>
+          <th scope="col">Фото</th>
+          <th scope="col">Название</th>
+          <th scope="col">Краткое описание</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ex in s.exhibits.all %}
+        <tr>
+          <td>
+            {% if ex.image %}
+            <figure>
+              <a href="{% url 'museum:exhibit_detail' ex.pk %}">
+                <img src="{{ ex.image.url }}" alt="Миниатюра: {{ ex.name }}" width="120" height="90" loading="lazy">
+              </a>
+            </figure>
+            {% else %}
+            <p>—</p>
+            {% endif %}
+          </td>
+          <th scope="row"><a href="{% url 'museum:exhibit_detail' ex.pk %}">{{ ex.name }}</a></th>
+          <td>{{ ex.description|truncatewords:12 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </article>
   {% empty %}
-    <li>Нет выставок.</li>
+  <p>Временные выставки пока не добавлены.</p>
   {% endfor %}
-</ul>
+</section>
+</article>
 {% endblock %}

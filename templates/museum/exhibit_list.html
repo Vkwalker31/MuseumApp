@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Экспонаты{% endblock %}
 {% block content %}
+<article>
 <h1>Экспонаты</h1>
 <form method="get">
   <input type="text" name="q" value="{{ search }}" placeholder="Поиск по названию, описанию, виду искусства">
@@ -12,21 +13,36 @@
   </select>
   <button type="submit">Применить</button>
 </form>
-<ul>
+
+<section aria-label="Каталог экспонатов">
   {% for ex in page_obj %}
-    <li>
-      <a href="{% url 'museum:exhibit_detail' ex.pk %}">{{ ex.name }}</a>
-      — {{ ex.art_type|default:"—" }}, зал {{ ex.hall|default:"—" }}, поступил {{ ex.date_of_entry|date:"d/m/Y"|default:"—" }}
-    </li>
+  <article>
+    {% if ex.image %}
+    <figure>
+      <a href="{% url 'museum:exhibit_detail' ex.pk %}">
+        <img src="{{ ex.image.url }}" alt="Экспонат «{{ ex.name }}»" width="240" height="180" loading="lazy">
+      </a>
+      <figcaption>{{ ex.art_type|default:"Экспонат" }}</figcaption>
+    </figure>
+    {% endif %}
+    <header>
+      <h3><a href="{% url 'museum:exhibit_detail' ex.pk %}">{{ ex.name }}</a></h3>
+    </header>
+    <p>{{ ex.description|truncatewords:30 }}</p>
+    <p><strong>Инвентарный номер:</strong> {{ ex.inventory_number|default:"—" }}</p>
+    <p><strong>Датировка:</strong> {{ ex.dating|default:"—" }}</p>
+    <p>{{ ex.art_type|default:"—" }}, зал {{ ex.hall|default:"—" }}, поступил <time datetime="{{ ex.date_of_entry|date:'Y-m-d' }}">{{ ex.date_of_entry|date:"d/m/Y"|default:"—" }}</time></p>
+  </article>
   {% empty %}
-    <li>Экспонатов нет.</li>
+  <p>Экспонатов нет.</p>
   {% endfor %}
-</ul>
-{% if page_obj.has_other_pages %}
-  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
-{% endif %}
+</section>
+
+{% include 'includes/pagination.html' %}
+
 {% if user.is_superuser %}
   <p><a href="{% url 'museum:exhibit_create' %}">Добавить экспонат</a></p>
 {% endif %}
 <p><a href="{% url 'museum:statistics' %}">Статистика</a></p>
+</article>
 {% endblock %}

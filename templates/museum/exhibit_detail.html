@@ -1,21 +1,58 @@
 {% extends 'base.html' %}
 {% block title %}{{ exhibit.name }}{% endblock %}
 {% block content %}
-<h1>{{ exhibit.name }}</h1>
-{% if exhibit.image %}<img src="{{ exhibit.image.url }}" alt="" width="300">{% endif %}
-<p>Вид искусства: {{ exhibit.art_type|default:"—" }}</p>
-<p>Зал: {{ exhibit.hall|default:"—" }}</p>
-<p>Дата поступления: {{ exhibit.date_of_entry|date:"d/m/Y"|default:"—" }}</p>
-<p>Ответственный: {{ exhibit.guardian|default:"—" }}</p>
-<p>Создано: {{ exhibit.created_at|date:"d/m/Y H:i" }}</p>
-<p>Изменено: {{ exhibit.updated_at|date:"d/m/Y H:i" }}</p>
-<p>{{ exhibit.description|linebreaks }}</p>
-{% if user.is_superuser %}
-  <p><a href="{% url 'museum:exhibit_edit' exhibit.pk %}">Редактировать</a>
-  <form method="post" action="{% url 'museum:exhibit_delete' exhibit.pk %}" style="display:inline">
-    {% csrf_token %}
-    <button type="submit">Удалить</button>
-  </form></p>
-{% endif %}
-<a href="{% url 'museum:exhibit_list' %}">К списку экспонатов</a>
+<article>
+  <header>
+    <h1>{{ exhibit.name }}</h1>
+  </header>
+
+  {% if exhibit.image %}
+  <figure>
+    <img src="{{ exhibit.image.url }}" alt="Фотография экспоната «{{ exhibit.name }}»" width="480" height="360" loading="lazy">
+    <figcaption>{{ exhibit.art_type|default:"Экспонат музея" }}</figcaption>
+  </figure>
+  {% endif %}
+
+  <section aria-label="Сведения об экспонате">
+    <h2>Основные данные</h2>
+    <dl>
+      <dt>Вид искусства</dt>
+      <dd>{{ exhibit.art_type|default:"—" }}</dd>
+      <dt>Инвентарный номер</dt>
+      <dd>{{ exhibit.inventory_number|default:"—" }}</dd>
+      <dt>Датировка</dt>
+      <dd>{{ exhibit.dating|default:"—" }}</dd>
+      <dt>Зал</dt>
+      <dd>{{ exhibit.hall|default:"—" }}</dd>
+      <dt>Дата поступления</dt>
+      <dd><time datetime="{{ exhibit.date_of_entry|date:'Y-m-d' }}">{{ exhibit.date_of_entry|date:"d/m/Y"|default:"—" }}</time></dd>
+      <dt>Ответственный хранитель</dt>
+      <dd>{{ exhibit.guardian|default:"—" }}</dd>
+    </dl>
+  </section>
+
+  <section aria-label="Описание">
+    <h2>Описание</h2>
+    {% for paragraph in exhibit.description.splitlines %}
+      {% if paragraph.strip %}
+      <p>{{ paragraph }}</p>
+      {% endif %}
+    {% empty %}
+    <p>Описание отсутствует.</p>
+    {% endfor %}
+  </section>
+
+  <footer>
+    <p><small>Создано: <time datetime="{{ exhibit.created_at|date:'c' }}">{{ exhibit.created_at|date:"d/m/Y H:i" }}</time></small></p>
+    <p><small>Изменено: <time datetime="{{ exhibit.updated_at|date:'c' }}">{{ exhibit.updated_at|date:"d/m/Y H:i" }}</time></small></p>
+    {% if user.is_superuser %}
+    <p><a href="{% url 'museum:exhibit_edit' exhibit.pk %}">Редактировать</a>
+    <form method="post" action="{% url 'museum:exhibit_delete' exhibit.pk %}">
+      {% csrf_token %}
+      <button type="submit">Удалить</button>
+    </form></p>
+    {% endif %}
+    <p><a href="{% url 'museum:exhibit_list' %}">К списку экспонатов</a></p>
+  </footer>
+</article>
 {% endblock %}
