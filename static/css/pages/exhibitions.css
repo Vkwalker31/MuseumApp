@@ -1,0 +1,62 @@
+/* Экспозиции и выставки */
+
+article > h1 + section > header p,
+article > section[aria-labelledby] > header > p {
+    color: var(--color-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.exhibition-section {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid rgba(44, 62, 107, 0.08);
+}
+
+.exhibition-section:last-of-type {
+    border-bottom: none;
+}
+
+.exhibition-card {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.exhibition-card > header h3 {
+    margin-bottom: var(--space-sm);
+}
+
+.exhibition-card > header p {
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+}
+
+.exhibition-card table {
+    margin-top: var(--space-md);
+}
+
+.exhibition-card table figure {
+    margin: 0;
+}
+
+.exhibition-card table img {
+    display: block;
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+}
+
+.exhibition-card table figcaption {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    margin-top: var(--space-xs);
+}
+
+.exhibition-card tbody tr:hover {
+    background: rgba(201, 162, 39, 0.06);
+}

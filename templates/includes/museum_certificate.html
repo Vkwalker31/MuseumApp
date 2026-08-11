@@ -1,0 +1,32 @@
+{% load static %}
+<div class="certificate certificate--museum" role="document" aria-label="Сертификат аккредитации музея">
+    <div class="certificate__crest">
+        <img src="{% static 'images/logo.png' %}" alt="Герб Музея искусств" width="72" height="72">
+    </div>
+    <p class="certificate__top-note">СЕРТИФИКАТ АККРЕДИТАЦИИ В ЕДИНОМ РЕЕСТРЕ МУЗЕЙНЫХ ОРГАНИЗАЦИЙ РЕСПУБЛИКИ БЕЛАРУСЬ</p>
+    <p class="certificate__registry">РЕЕСТР МУЗЕЙНЫХ ОРГАНИЗАЦИЙ</p>
+    <p class="certificate__title">СЕРТИФИКАТ</p>
+    <p class="certificate__subtitle">об аккредитации музея</p>
+    <div class="certificate__meta">
+        <span>г. Минск</span>
+        <span>15 марта 2024 г.</span>
+    </div>
+    <p class="certificate__company">Государственное учреждение культуры «{% if profile %}{{ profile.name }}{% else %}Музей искусств{% endif %}»</p>
+    <p class="certificate__inn">(УНП 100000000)</p>
+    <p class="certificate__number">Реестровый номер: МИ-2024-001</p>
+    <div class="certificate__footer">
+        <div class="certificate__sign-block">
+            <p class="certificate__seal" aria-hidden="true">ГОСУДАРСТВЕННЫЙ<br>МУЗЕЙ</p>
+            <p class="certificate__signature">Ковалёва Е.В.<br>Директор Музея искусств</p>
+        </div>
+        <div class="certificate__contacts">
+            <p>Министерство культуры Республики Беларусь</p>
+            <p>220030, г. Минск, ул. Культуры, 1</p>
+            <p>+375 (17) 200-00-00</p>
+            <p>info@museum.by</p>
+        </div>
+    </div>
+</div>
+<p class="certificate-print">
+    <button type="button" class="certificate-print__btn" onclick="window.print()">Печать сертификата</button>
+</p>

@@ -1,0 +1,36 @@
+{% load static %}
+<div class="media-players">
+    <div class="media-player media-player--video">
+        <h3>Видео о музее</h3>
+        <div class="media-player__frame">
+            {% if profile and profile.video_url %}
+            <iframe class="media-player__iframe" title="Видео о музее" src="{{ profile.video_url }}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen loading="lazy"></iframe>
+            {% elif profile and profile.video_file %}
+            <video class="media-player__video" controls poster="{% static 'images/logo.png' %}">
+                <source src="{{ profile.video_file.url }}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+            {% else %}
+            <iframe class="media-player__iframe" title="Видео о музее (демо)"
+                src="https://www.youtube.com/embed/ScMzIvxBSi4" allowfullscreen loading="lazy"></iframe>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="media-player media-player--audio">
+        <h3>Аудиогид</h3>
+        {% if profile and profile.audio_file %}
+        <audio class="media-player__audio" controls preload="metadata">
+            <source src="{{ profile.audio_file.url }}">
+            Ваш браузер не поддерживает аудио.
+        </audio>
+        {% else %}
+        <audio class="media-player__audio" controls preload="none">
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Ваш браузер не поддерживает аудио.
+        </audio>
+        {% endif %}
+    </div>
+</div>
