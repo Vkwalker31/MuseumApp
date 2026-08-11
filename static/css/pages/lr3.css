@@ -1,0 +1,171 @@
+/* Scroll animation — статуи (ЛР3) */
+
+@import url('about-dark.css');
+@import url('vacancies-dark.css');
+@import url('promo-dark.css');
+@import url('catalog-dark.css');
+@import url('news-dark.css');
+@import url('faq-dark.css');
+@import url('contacts-dark.css');
+@import url('reviews-dark.css');
+
+.scroll-statues-section {
+    perspective: 800px;
+    min-height: 120vh;
+    padding: var(--space-xl) 0;
+    text-align: center;
+    text-indent: 0;
+}
+
+.scroll-statues-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60vh;
+    padding: 20vh 0;
+}
+
+.scroll-statue {
+    width: 200px;
+    height: 280px;
+    transition: transform 0.1s linear, opacity 0.1s linear;
+    will-change: transform, opacity;
+}
+
+.scroll-statue img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.35));
+}
+
+.scroll-fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-fade-in--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.catalog-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+
+.catalog-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-indent: 0;
+}
+
+.catalog-card a {
+    display: block;
+    padding: var(--space-md);
+    text-decoration: none;
+    color: inherit;
+}
+
+.catalog-card h3 {
+    font-size: 1rem;
+    margin: var(--space-sm) 0;
+}
+
+.catalog-card data {
+    display: block;
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+.catalog-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    align-items: center;
+    margin: var(--space-md) 0;
+    text-indent: 0;
+}
+
+.catalog-pagination button {
+    padding: 0.35em 0.75em;
+    border: 1px solid var(--color-border);
+    background: #fff;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.catalog-pagination button.active {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.catalog-page-info {
+    margin-right: var(--space-sm);
+    font-size: 0.875rem;
+}
+
+.card-3d {
+    transform-style: preserve-3d;
+}
+
+.theme-toggle-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    text-indent: 0;
+    margin: 0;
+    padding: 0.25em 0.5em;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.theme-toggle-wrap__icon {
+    display: inline-block;
+    width: 1.1em;
+    text-align: center;
+    line-height: 1;
+}
+
+.theme-toggle-wrap input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--color-accent);
+}
+
+[data-theme="dark"] .catalog-card,
+.dark-theme .catalog-card {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .catalog-card h3,
+.dark-theme .catalog-card h3 {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] .catalog-pagination button,
+.dark-theme .catalog-pagination button {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] .catalog-pagination button.active,
+.dark-theme .catalog-pagination button.active {
+    background: var(--color-primary);
+    color: #fff;
+}
