@@ -1,0 +1,55 @@
+/* Тёмная тема — вакансии */
+
+[data-theme="dark"] .vacancy-card,
+[data-theme="dark"] article > section[id^="vacancy-"],
+.dark-theme .vacancy-card,
+.dark-theme article > section[id^="vacancy-"] {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    box-shadow: none;
+}
+
+[data-theme="dark"] .vacancies-list .vacancy-card:nth-child(even),
+[data-theme="dark"] article > section[id^="vacancy-"]:nth-child(even),
+.dark-theme .vacancies-list .vacancy-card:nth-child(even),
+.dark-theme article > section[id^="vacancy-"]:nth-child(even) {
+    background: var(--color-surface-elevated);
+}
+
+[data-theme="dark"] .vacancy-card h2,
+[data-theme="dark"] article > section[id^="vacancy-"] h2,
+.dark-theme .vacancy-card h2,
+.dark-theme article > section[id^="vacancy-"] h2 {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] .vacancy-card > p,
+[data-theme="dark"] article > section[id^="vacancy-"] > p,
+.dark-theme .vacancy-card > p,
+.dark-theme article > section[id^="vacancy-"] > p {
+    background: var(--color-surface);
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] .vacancy-card > p time,
+[data-theme="dark"] article > section[id^="vacancy-"] > p time,
+.dark-theme .vacancy-card > p time,
+.dark-theme article > section[id^="vacancy-"] > p time {
+    color: var(--color-link);
+}
+
+[data-theme="dark"] .vacancy-card > div,
+[data-theme="dark"] article > section[id^="vacancy-"] > div,
+.dark-theme .vacancy-card > div,
+.dark-theme article > section[id^="vacancy-"] > div {
+    border-top-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .vacancy-card > div p,
+[data-theme="dark"] article > section[id^="vacancy-"] > div p,
+.dark-theme .vacancy-card > div p,
+.dark-theme article > section[id^="vacancy-"] > div p {
+    color: var(--color-text);
+}

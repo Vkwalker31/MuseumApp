@@ -1,0 +1,42 @@
+/* Тёмная тема — каталог тарифов */
+
+[data-theme="dark"] .tariffs-table tbody tr,
+[data-theme="dark"] .tariffs-table tbody tr:nth-child(odd),
+[data-theme="dark"] .tariffs-table tbody tr:nth-child(even),
+[data-theme="dark"] article > table tbody tr,
+[data-theme="dark"] article > table tbody tr:nth-child(odd),
+[data-theme="dark"] article > table tbody tr:nth-child(even),
+.dark-theme .tariffs-table tbody tr,
+.dark-theme .tariffs-table tbody tr:nth-child(odd),
+.dark-theme .tariffs-table tbody tr:nth-child(even),
+.dark-theme article > table tbody tr,
+.dark-theme article > table tbody tr:nth-child(odd),
+.dark-theme article > table tbody tr:nth-child(even) {
+    background: var(--color-surface) !important;
+}
+
+[data-theme="dark"] .tariffs-table tbody th,
+[data-theme="dark"] .tariffs-table tbody td,
+[data-theme="dark"] article > table tbody th,
+[data-theme="dark"] article > table tbody td,
+.dark-theme .tariffs-table tbody th,
+.dark-theme .tariffs-table tbody td,
+.dark-theme article > table tbody th,
+.dark-theme article > table tbody td {
+    background: inherit !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .tariffs-table tbody th[scope="rowgroup"],
+.dark-theme .tariffs-table tbody th[scope="rowgroup"] {
+    background: var(--color-surface-elevated) !important;
+    color: var(--color-heading) !important;
+}
+
+[data-theme="dark"] article > h1 + p,
+.dark-theme article > h1 + p {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-left-color: var(--color-primary);
+}

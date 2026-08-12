@@ -1,0 +1,53 @@
+/* Тёмная тема — словарь терминов */
+
+[data-theme="dark"] article details,
+[data-theme="dark"] article details[id^="faq-"],
+.dark-theme article details,
+.dark-theme article details[id^="faq-"] {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    box-shadow: none;
+}
+
+[data-theme="dark"] article details summary,
+.dark-theme article details summary {
+    background: var(--color-surface);
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] article details:nth-child(even) summary,
+.dark-theme article details:nth-child(even) summary {
+    background: var(--color-surface);
+}
+
+[data-theme="dark"] article details summary strong,
+.dark-theme article details summary strong {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] article details summary time,
+.dark-theme article details summary time {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] article details summary:hover,
+.dark-theme article details summary:hover {
+    background: var(--color-surface-elevated);
+}
+
+[data-theme="dark"] article details > div,
+.dark-theme article details > div {
+    background: var(--color-surface);
+    border-top-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] article details > div p,
+.dark-theme article details > div p {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] article details[open],
+.dark-theme article details[open] {
+    border-color: var(--color-accent);
+}

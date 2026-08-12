@@ -1,0 +1,52 @@
+/* Тёмная тема — новости */
+
+[data-theme="dark"] .news-list > li,
+[data-theme="dark"] article > ul > li,
+.dark-theme .news-list > li,
+.dark-theme article > ul > li {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    box-shadow: none;
+}
+
+[data-theme="dark"] .news-card__body h2 a,
+[data-theme="dark"] article > ul > li article h2 a,
+.dark-theme .news-card__body h2 a,
+.dark-theme article > ul > li article h2 a {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] .news-summary,
+[data-theme="dark"] article > ul > li article > p:first-of-type,
+.dark-theme .news-summary,
+.dark-theme article > ul > li article > p:first-of-type {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] article > ul > li time,
+.dark-theme article > ul > li time {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] article > nav[aria-label="Страницы новостей"],
+.dark-theme article > nav[aria-label="Страницы новостей"] {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] article > p em,
+.dark-theme article > p em {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-left-color: var(--color-accent);
+}
+
+[data-theme="dark"] .news-content,
+[data-theme="dark"] article > section.news-content,
+.dark-theme .news-content,
+.dark-theme article > section.news-content {
+    column-rule-color: var(--color-border);
+    color: var(--color-text);
+}

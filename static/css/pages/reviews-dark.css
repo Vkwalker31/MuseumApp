@@ -1,0 +1,67 @@
+/* Тёмная тема — отзывы */
+
+[data-theme="dark"] .reviews-filter-form,
+[data-theme="dark"] article > form.reviews-filter-form,
+[data-theme="dark"] article > form[method="get"],
+.dark-theme .reviews-filter-form,
+.dark-theme article > form.reviews-filter-form,
+.dark-theme article > form[method="get"] {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] article > ul > li,
+.dark-theme article > ul > li {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    border-left-color: var(--color-accent);
+    color: var(--color-text);
+    box-shadow: none;
+}
+
+[data-theme="dark"] article > ul > li article h2,
+.dark-theme article > ul > li article h2 {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] article > ul > li article > p time,
+.dark-theme article > ul > li article > p time {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] article > ul > li blockquote,
+.dark-theme article > ul > li blockquote {
+    background: var(--color-surface);
+    border-left-color: var(--color-primary);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] article > ul > li blockquote p,
+.dark-theme article > ul > li blockquote p {
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .form-demo,
+.dark-theme .form-demo {
+    background: var(--color-surface);
+    border-color: var(--color-accent);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .form-demo legend,
+.dark-theme .form-demo legend {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] #review-form,
+.dark-theme #review-form {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] article > p:last-of-type,
+.dark-theme article > p:last-of-type {
+    color: var(--color-muted);
+}

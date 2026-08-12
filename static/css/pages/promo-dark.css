@@ -1,0 +1,33 @@
+/* Тёмная тема — промокоды */
+
+[data-theme="dark"] article > section:first-of-type tbody tr,
+[data-theme="dark"] article > section:first-of-type tbody tr:nth-child(odd),
+[data-theme="dark"] article > section:first-of-type tbody tr:nth-child(even),
+.dark-theme article > section:first-of-type tbody tr,
+.dark-theme article > section:first-of-type tbody tr:nth-child(odd),
+.dark-theme article > section:first-of-type tbody tr:nth-child(even) {
+    background: var(--color-surface) !important;
+}
+
+[data-theme="dark"] article > section:first-of-type tbody th[scope="row"],
+.dark-theme article > section:first-of-type tbody th[scope="row"] {
+    background: var(--color-surface-elevated) !important;
+    color: var(--color-heading) !important;
+}
+
+[data-theme="dark"] article > section:first-of-type tbody td,
+.dark-theme article > section:first-of-type tbody td {
+    color: var(--color-text) !important;
+}
+
+[data-theme="dark"] article > section:first-of-type tbody tr:hover,
+.dark-theme article > section:first-of-type tbody tr:hover {
+    background: var(--color-surface-elevated) !important;
+}
+
+[data-theme="dark"] .promo-archive li,
+.dark-theme .promo-archive li {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}

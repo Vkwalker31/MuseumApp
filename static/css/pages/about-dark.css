@@ -1,0 +1,57 @@
+/* Тёмная тема — раздел «О компании» */
+
+[data-theme="dark"] article > section[id^="about-block-"],
+.dark-theme article > section[id^="about-block-"] {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] #history ol li,
+.dark-theme #history ol li {
+    background: var(--color-surface-elevated);
+    border-left-color: var(--color-primary);
+    color: var(--color-text);
+    box-shadow: none;
+}
+
+[data-theme="dark"] #history ol li time,
+.dark-theme #history ol li time {
+    color: var(--color-link);
+}
+
+[data-theme="dark"] #history ol li strong,
+.dark-theme #history ol li strong {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] #history ol li p,
+.dark-theme #history ol li p {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] #requisites pre,
+.dark-theme #requisites pre {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .media-player--audio,
+.dark-theme .media-player--audio {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .media-player__audio,
+.dark-theme .media-player__audio {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] #quote blockquote,
+.dark-theme #quote blockquote {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}

@@ -1,0 +1,46 @@
+/* Тёмная тема — контакты */
+
+[data-theme="dark"] .contact-card,
+[data-theme="dark"] article > section[id^="contact-"],
+.dark-theme .contact-card,
+.dark-theme article > section[id^="contact-"] {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    box-shadow: none;
+}
+
+[data-theme="dark"] .contact-card__info h2,
+[data-theme="dark"] article > section[id^="contact-"] > h2,
+.dark-theme .contact-card__info h2,
+.dark-theme article > section[id^="contact-"] > h2 {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] .contact-card__info div p,
+[data-theme="dark"] article > section[id^="contact-"] > div p,
+.dark-theme .contact-card__info div p,
+.dark-theme article > section[id^="contact-"] > div p {
+    color: var(--color-muted);
+}
+
+[data-theme="dark"] .contact-card__info address,
+[data-theme="dark"] article > section[id^="contact-"] address,
+.dark-theme .contact-card__info address,
+.dark-theme article > section[id^="contact-"] address {
+    background: var(--color-surface);
+    border-left-color: var(--color-primary);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .contact-card__info address a,
+[data-theme="dark"] article > section[id^="contact-"] address a,
+.dark-theme .contact-card__info address a,
+.dark-theme article > section[id^="contact-"] address a {
+    color: var(--color-link);
+}
+
+[data-theme="dark"] article > section[id^="contact-"] figure figcaption,
+.dark-theme article > section[id^="contact-"] figure figcaption {
+    color: var(--color-muted);
+}
