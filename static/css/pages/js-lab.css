@@ -1,0 +1,319 @@
+/* Страница «Задания JS» */
+
+.js-tasks {
+    text-indent: 0;
+}
+
+.js-tasks__hero {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.js-tasks__hero h1 {
+    margin-bottom: var(--space-sm);
+}
+
+.js-tasks__hero .page-lead {
+    text-indent: 0;
+    margin: 0;
+    max-width: 42rem;
+    color: var(--color-muted);
+}
+
+.task-card {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: rgba(44, 62, 107, 0.04);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.task-card__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.task-card__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.5em;
+    background: var(--color-primary);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: var(--radius);
+    flex-shrink: 0;
+}
+
+.task-card__head h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.task-card__desc {
+    text-indent: 0;
+    margin: 0 0 var(--space-md);
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+}
+
+.task-card__body {
+    text-indent: 0;
+}
+
+.task-card__sub {
+    padding: var(--space-md);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.task-card__sub h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: var(--color-primary);
+}
+
+.task-card__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    margin-top: var(--space-sm);
+}
+
+.task-btn {
+    display: inline-block;
+    padding: 0.45em 1.1em;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-main);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.task-btn:hover {
+    background: var(--color-accent);
+    color: var(--color-text);
+}
+
+.task-btn--outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+.task-btn--outline:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.task-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.task-form input {
+    flex: 1 1 120px;
+    min-width: 0;
+}
+
+.task-input-full {
+    width: 100%;
+    margin-bottom: var(--space-sm);
+}
+
+.task-list {
+    margin: 0 0 var(--space-sm);
+    padding-left: 1.25em;
+    font-size: 0.9375rem;
+}
+
+.task-list li {
+    margin-bottom: 0.25em;
+}
+
+.task-result {
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(201, 162, 39, 0.12);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    text-indent: 0;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin: var(--space-sm) 0;
+}
+
+.birthdate-block label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25em;
+}
+
+.toy-mode-switch {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    text-indent: 0;
+}
+
+.toy-mode-label {
+    font-size: 0.9375rem;
+    color: var(--color-muted);
+}
+
+.toy-mode-buttons {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.task-btn--active {
+    background: var(--color-accent);
+    color: var(--color-text);
+}
+
+.toy-single-block {
+    margin-top: 0;
+}
+
+.task-error {
+    color: #c0392b;
+    font-size: 0.875rem;
+    text-indent: 0;
+    margin: var(--space-xs) 0;
+    min-height: 1.25em;
+}
+
+[data-theme="dark"] .task-error,
+.dark-theme .task-error {
+    color: #ff8a8a;
+}
+
+.toy-forms {
+    display: block;
+}
+
+.api-demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-md);
+}
+
+.api-result {
+    margin-top: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    text-indent: 0;
+}
+
+.arccos-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    margin-bottom: var(--space-md);
+    text-indent: 0;
+}
+
+.arccos-table-wrap {
+    overflow-x: auto;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: var(--space-md) 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.arccos-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.arccos-table th,
+.arccos-table td {
+    padding: 0.4em 0.55em;
+    border: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.arccos-table thead th {
+    background: var(--color-primary);
+    color: #fff;
+    position: sticky;
+    top: 0;
+}
+
+.chart-wrap {
+    max-width: 900px;
+    margin: var(--space-md) auto 0;
+    padding: var(--space-md);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .task-card,
+.dark-theme .task-card {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .task-card__sub,
+.dark-theme .task-card__sub {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .task-card__sub h3,
+.dark-theme .task-card__sub h3 {
+    color: var(--color-heading);
+}
+
+[data-theme="dark"] .task-result,
+.dark-theme .task-result {
+    background: rgba(224, 192, 80, 0.12);
+    color: var(--color-text);
+}
+
+[data-theme="dark"] .chart-wrap,
+.dark-theme .chart-wrap {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .task-btn--outline,
+.dark-theme .task-btn--outline {
+    color: var(--color-link);
+    border-color: var(--color-link);
+}
+
+@media (max-width: 768px) {
+    .task-card {
+        padding: var(--space-md);
+    }
+
+    .toy-mode-switch {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
