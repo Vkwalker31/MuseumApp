@@ -206,6 +206,8 @@ class Exhibit(models.Model):
         verbose_name='Ответственный (хранитель)',
     )
     description = models.TextField('Описание', blank=True)
+    inventory_number = models.CharField('Инвентарный номер', max_length=50, blank=True)
+    dating = models.CharField('Датировка', max_length=100, blank=True)
     image = models.FileField('Фото', upload_to='exhibits/', null=True, blank=True)
     created_at = models.DateTimeField('Создано', auto_now_add=True)
     updated_at = models.DateTimeField('Изменено', auto_now=True)
@@ -313,6 +315,17 @@ class Tour(models.Model):
         choices=SEASON_CHOICES,
         blank=True,
     )
+    duration_minutes = models.PositiveSmallIntegerField(
+        'Длительность (мин.)',
+        default=60,
+    )
+    audience = models.CharField('Целевая аудитория', max_length=200, blank=True)
+    price = models.DecimalField(
+        'Стоимость (BYN)',
+        max_digits=8,
+        decimal_places=2,
+        default=0,
+    )
     created_at = models.DateTimeField('Создано', auto_now_add=True)
     updated_at = models.DateTimeField('Изменено', auto_now=True)
 
@@ -326,9 +339,14 @@ class Tour(models.Model):
 
 
 class TicketPrice(models.Model):
-    """Стоимость посещения: зависит от дня недели, возраста, доп. услуг."""
+    """
+    Услуга / тариф посещения (каталог товаров): цена, описание, изображение.
+    Зависит от дня недели, возраста, доп. услуг.
+    """
     name = models.CharField('Наименование тарифа', max_length=200)
     base_price = models.DecimalField('Базовая цена', max_digits=10, decimal_places=2, default=0)
+    description = models.TextField('Описание услуги', blank=True)
+    image = models.FileField('Изображение', upload_to='services/', null=True, blank=True)
     # 0-6 понедельник-воскресенье, null — любой день
     day_of_week = models.PositiveSmallIntegerField(
         'День недели (0-6, пусто — любой)',
@@ -340,8 +358,8 @@ class TicketPrice(models.Model):
     is_extra_service = models.BooleanField('Доп. услуга', default=False)
 
     class Meta:
-        verbose_name = 'Тариф'
-        verbose_name_plural = 'Тарифы'
+        verbose_name = 'Тариф / услуга'
+        verbose_name_plural = 'Тарифы / услуги'
         ordering = ['name']
 
     def __str__(self):

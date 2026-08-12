@@ -1,6 +1,6 @@
 """
 Модели общих страниц: главная, о компании, новости, словарь, контакты,
-вакансии, отзывы, промокоды. Обязательные таблицы по заданию.
+вакансии, отзывы, промокоды, партнёры. Обязательные таблицы по заданию.
 """
 from django.db import models
 from django.conf import settings
@@ -23,8 +23,25 @@ class Article(models.Model):
         return self.title
 
 
+class Partner(models.Model):
+    """Компании-партнёры: логотип и ссылка на сайт."""
+    name = models.CharField('Название', max_length=200)
+    logo = models.FileField('Логотип', upload_to='partners/', null=True, blank=True)
+    website_url = models.URLField('Сайт')
+    order = models.PositiveSmallIntegerField('Порядок', default=0)
+    is_active = models.BooleanField('Показывать', default=True)
+
+    class Meta:
+        verbose_name = 'Партнёр'
+        verbose_name_plural = 'Партнёры'
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return self.name
+
+
 class CompanyInfo(models.Model):
-    """О компании: текст, реквизиты (таблица в БД)."""
+    """О компании: текстовые блоки (таблица в БД)."""
     title = models.CharField('Заголовок', max_length=200)
     content = models.TextField('Текст')
     order = models.PositiveSmallIntegerField('Порядок', default=0)
@@ -36,6 +53,48 @@ class CompanyInfo(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class CompanyProfile(models.Model):
+    """
+    Профиль компании: логотип, видео, аудио, реквизиты, сертификат.
+    Обычно одна запись.
+    """
+    name = models.CharField('Название организации', max_length=300, default='Музей искусств')
+    logo = models.FileField('Логотип', upload_to='company/', null=True, blank=True)
+    video_file = models.FileField('Видео', upload_to='company/video/', null=True, blank=True)
+    video_url = models.URLField('URL видео (iframe)', blank=True)
+    audio_file = models.FileField('Аудиогид / аудио', upload_to='company/audio/', null=True, blank=True)
+    requisites = models.TextField('Реквизиты', blank=True)
+    certificate_text = models.TextField('Сертификат (текст без стилей)', blank=True)
+    map_embed_url = models.URLField(
+        'URL карты (iframe)',
+        blank=True,
+        default='https://www.openstreetmap.org/export/embed.html?bbox=27.55%2C53.89%2C27.57%2C53.91&layer=mapnik',
+    )
+
+    class Meta:
+        verbose_name = 'Профиль компании'
+        verbose_name_plural = 'Профиль компании'
+
+    def __str__(self):
+        return self.name
+
+
+class CompanyHistory(models.Model):
+    """История компании по годам."""
+    year = models.PositiveIntegerField('Год')
+    title = models.CharField('Событие', max_length=300)
+    description = models.TextField('Описание', blank=True)
+    order = models.PositiveSmallIntegerField('Порядок', default=0)
+
+    class Meta:
+        verbose_name = 'Историческое событие'
+        verbose_name_plural = 'История по годам'
+        ordering = ['year', 'order']
+
+    def __str__(self):
+        return f'{self.year}: {self.title}'
 
 
 class News(models.Model):

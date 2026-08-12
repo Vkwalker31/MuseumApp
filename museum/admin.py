@@ -126,6 +126,11 @@ class TourAdmin(admin.ModelAdmin):
 class TicketPriceAdmin(admin.ModelAdmin):
     list_display = ['name', 'base_price', 'day_of_week', 'is_child', 'is_adult', 'is_extra_service']
     list_filter = ['is_child', 'is_adult', 'is_extra_service']
+    search_fields = ['name', 'description']
+    fields = [
+        'name', 'base_price', 'description', 'image',
+        'day_of_week', 'is_child', 'is_adult', 'is_extra_service',
+    ]
 
 
 @admin.register(TicketPurchase)

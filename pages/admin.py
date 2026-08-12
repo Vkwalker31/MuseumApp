@@ -4,7 +4,10 @@
 from django.contrib import admin
 from .models import (
     Article,
+    Partner,
     CompanyInfo,
+    CompanyProfile,
+    CompanyHistory,
     News,
     FAQ,
     Contact,
@@ -21,10 +24,29 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'content']
 
 
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ['name', 'website_url', 'order', 'is_active']
+    list_editable = ['order', 'is_active']
+    search_fields = ['name']
+
+
 @admin.register(CompanyInfo)
 class CompanyInfoAdmin(admin.ModelAdmin):
     list_display = ['title', 'order']
     list_editable = ['order']
+
+
+@admin.register(CompanyProfile)
+class CompanyProfileAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+
+@admin.register(CompanyHistory)
+class CompanyHistoryAdmin(admin.ModelAdmin):
+    list_display = ['year', 'title', 'order']
+    list_editable = ['order']
+    ordering = ['year']
 
 
 @admin.register(News)
